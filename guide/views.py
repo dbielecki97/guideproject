@@ -21,12 +21,12 @@ class AttractionDetailView(DetailView):
         minutes = int((self.object.timeNeededToSightsee % 1)*60)
         result = ''
         if hours:
-            if hour == 1:
+            if hours == 1:
                 result += str(hours) + ' godzina'
             else:
                 result += str(hours) + ' godzin'
-
-        result += ' '+str(minutes) + ' minut'
+        if minutes:
+            result += ' '+str(minutes) + ' minut'
         return result
 
     def get_context_data(self, **kwargs):

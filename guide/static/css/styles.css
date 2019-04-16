@@ -15,3 +15,6 @@ html,body{
     text-align: center;
     width:100vw;
 }
+.list-no-bullet{
+    list-style-type: none;
+}
