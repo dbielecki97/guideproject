@@ -3,6 +3,7 @@
     Attractions
 {% endblock title %}    
 {% block content %}
+    <div id="map"></div>
     <h1>Lista wszystkich dostępnych atrakcji</h1>
     {% if attraction_list %}
         <ul>
@@ -13,5 +14,7 @@
     {% else %}
         <p>Brak atrakcji</p>
     {% endif %}
-
+<script type="text/javascript">
+    data_from_django = {{ localizations|safe }};
+</script>
 {% endblock content %}

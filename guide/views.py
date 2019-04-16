@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
 from django.utils import timezone
+import simplejson
 # Create your views here.
 
 
@@ -11,6 +12,18 @@ def home(request):
 
 class AttractionListView(ListView):
     model = Attraction
+
+    def getPositions(self):
+        pos = []
+        for obj in self.object_list:
+            pos.append({"lat": obj.localization.latitude,
+                        "lgt": obj.localization.longitude})
+        return pos
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["localizations"] = simplejson.dumps(self.getPositions())
+        return context
 
 
 class AttractionDetailView(DetailView):
