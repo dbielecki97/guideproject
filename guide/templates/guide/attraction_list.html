@@ -4,12 +4,11 @@
 {% endblock title %}    
 {% block content %}
     <h1>Lista wszystkich dostępnych atrakcji</h1>
-    {% if attraction_list.length %}
+    {% if attraction_list %}
         <ul>
-        {% for attractions in attraction_list  %}
-        <li>{{attraction.name}}</li>
+        {% for attraction in attraction_list  %}
+        <li><a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a></li>
         {% endfor %}
-
         </ul>
     {% else %}
         <p>Brak atrakcji</p>

@@ -8,6 +8,12 @@ class Client(User):
     surname = models.CharField(
         _("Surname"), max_length=50, null=True, blank=True)
 
+    def __str__(self):
+        return ''+self.name+' '+self.surname
+
+    class Meta:
+        verbose_name = "client"
+
 
 class Category(models.Model):
     name = models.CharField(_("Name"), max_length=50)
@@ -15,17 +21,22 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "categories"
+
 
 class Attraction(models.Model):
     name = models.CharField(_("Name"),
                             max_length=200, help_text="Enter attraction's name.")
     description = models.TextField(max_length=500)
-    category = models.ManyToManyField(
-        Category)
-    localizations = models.ForeignKey(
+    categories = models.ManyToManyField(
+        "Category")
+    localization = models.ForeignKey(
         "Localization", verbose_name=_("Address"), on_delete=models.SET_NULL, null=True)
     timeNeededToSightsee = models.FloatField(
         _("Time neede to sightsee (in hours)"))
+    ticketCost = models.FloatField(
+        _("Koszy biletu wstępu"))
 
     def __str__(self):
         return self.name
@@ -40,7 +51,7 @@ class Localization(models.Model):
     voivodeship = models.CharField(_("Voivodeship"), max_length=50)
 
     def __str__(self):
-        return '' + self.street + ' '+self.zipCode+' ' + self.city+' '+self.voivodeship
+        return '' + self.street + ' '+self.zipCode+', ' + self.city+', '+self.voivodeship
 
 
 class ShoppingCart(models.Model):
