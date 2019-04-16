@@ -36,7 +36,7 @@ class Attraction(models.Model):
     timeNeededToSightsee = models.FloatField(
         _("Time neede to sightsee (in hours)"))
     ticketCost = models.FloatField(
-        _("Koszy biletu wstępu"))
+        _("Ticket's cost"), default=0)
 
     def __str__(self):
         return self.name
@@ -48,7 +48,7 @@ class Localization(models.Model):
     zipCode = models.CharField(
         _("Zipcode"), max_length=10, help_text='Zip code')
     city = models.CharField(_("City"), max_length=50)
-    voivodeship = models.CharField(_("Voivodeship"), max_length=50)
+    voivodeship = models.CharField(_("Wejewództwo"), max_length=50)
 
     def __str__(self):
         return '' + self.street + ' '+self.zipCode+', ' + self.city+', '+self.voivodeship
