@@ -4,8 +4,17 @@
 {% endblock title %}
 {% block content %}
     <h2>{{attraction.name}}</h2>
+    <div id="map"></div>
     <p>Opis: {{attraction.description}}</p>
     <p>Lokalizacja: {{attraction.localization}}</p>
     <p>Czas potrzebny na zwiedzanie: {{longTimeNeededToSightsee}}</p>
     <p>Cena biletu: {{attraction.ticketCost}}zł</p>
+    <script type="text/javascript">
+        loc={{locationInfo|safe}}
+    </script>
 {% endblock content %}
+{% block scripts %}
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=attractionDetail">
+  </script>
+{% endblock scripts %}

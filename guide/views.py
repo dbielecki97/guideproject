@@ -4,9 +4,6 @@ from django.utils import timezone
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
-from PIL import Image
-from io import BytesIO
-# Create your views here.
 
 
 def home(request):
@@ -20,17 +17,22 @@ class AttractionListView(ListView):
         pos = []
         for obj in self.object_list:
             pos.append({"name": obj.name, "lat": obj.localization.latitude,
-                        "lgt": obj.localization.longitude})
+                        "lng": obj.localization.longitude})
         return pos
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["attractions"] = simplejson.dumps(self.getAttractionsInfo())
+        context["locationsInfo"] = simplejson.dumps(self.getAttractionsInfo())
         return context
 
 
 class AttractionDetailView(DetailView):
     model = Attraction
+
+    def getAttractionsInfo(self):
+        pos = {"name": self.object.name, "lat": self.object.localization.latitude,
+               "lng": self.object.localization.longitude}
+        return pos
 
     def getLongTimeNeededToSoghtsee(self):
         hours = int(self.object.timeNeededToSightsee)
@@ -48,6 +50,7 @@ class AttractionDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['longTimeNeededToSightsee'] = self.getLongTimeNeededToSoghtsee()
+        context['locationInfo'] = self.getAttractionsInfo()
         return context
 
 
