@@ -1,8 +1,11 @@
+from . import google_maps_api
+import simplejson
+from django.utils import timezone
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
-from django.utils import timezone
-import simplejson
+from PIL import Image
+from io import BytesIO
 # Create your views here.
 
 
@@ -13,16 +16,16 @@ def home(request):
 class AttractionListView(ListView):
     model = Attraction
 
-    def getPositions(self):
+    def getAttractionsInfo(self):
         pos = []
         for obj in self.object_list:
-            pos.append({"lat": obj.localization.latitude,
+            pos.append({"name": obj.name, "lat": obj.localization.latitude,
                         "lgt": obj.localization.longitude})
         return pos
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["localizations"] = simplejson.dumps(self.getPositions())
+        context["attractions"] = simplejson.dumps(self.getAttractionsInfo())
         return context
 
 

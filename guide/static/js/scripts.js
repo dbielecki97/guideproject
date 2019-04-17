@@ -1,20 +1,60 @@
 var directionsDisplay;
 var directionsService;
+
+function setMarkers(map, locations) {
+    var marker, i
+    for (i = 0; i < locations.length; i++) {
+        var name = locations[i]['name']
+        var lat = locations[i]['lat']
+        var long = locations[i]['lgt']
+        latlngset = new google.maps.LatLng(lat, long);
+        console.log(latlngset);
+        var marker = new google.maps.Marker({
+            map: map, title: name, position: latlngset
+        });
+        var infowindow = new google.maps.InfoWindow()
+        google.maps.event.addListener(marker, 'click', (function (marker, name, infowindow) {
+            return function () {
+                infowindow.setContent(name);
+                infowindow.open(map, marker);
+            };
+        })(marker, name, infowindow));
+    }
+}
+
+
 function initMap() {
     directionsDisplay = new google.maps.DirectionsRenderer();
     directionsService = new google.maps.DirectionsService();
-    var pb = data_from_django[0]
-    var palac_branickich = new google.maps.LatLng(pb["lat"], pb["lgt"]);
+
+    var bialystok = new google.maps.LatLng(53.12750505, 23.14705087);
     var mapOptions = {
-        zoom: 15,
-        center: palac_branickich
+        zoom: 12,
+        center: bialystok,
+        disableDefaultUI: true,
     }
     var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    var marker = new google.maps.Marker({
-        position: palac_branickich,
-        map: map,
-        title: "start"
-    });
+    // for (var i in attractions) {
+    //     var marker = new google.maps.Marker({
+    //         position: new google.maps.LatLng(attractions[i]['lat'], attractions[i]['lgt']),
+    //         map: map,
+    //         animation: google.maps.Animation.DROP,
+    //     });
+    //     var contentString = '<div id="info">' +
+    //         '<h1 id="firstHeading" class="firstHeading">' + attractions[i]['name'] + '</h1>' +
+    //         '</div>';
+
+    //     var infowindow = new google.maps.InfoWindow({
+    //         content: contentString
+    //     });
+
+    //     google.maps.event.addListener(marker, 'click', (function (marker, infowindow) {
+    //         return function () {
+    //             infowindow.open(map, marker);
+    //         };
+    //     })(marker, content, infowindow));
+    // }
+    setMarkers(map, attractions);
     directionsDisplay.setMap(map);
     // calcRoute(map);
 }
