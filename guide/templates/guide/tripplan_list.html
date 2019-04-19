@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}
+    Attractions
+{% endblock title %}    
+{% block content %}
+    <h1>Lista proponowanych planów</h1>
+    {% if tripplan_list %}
+        <ul>
+        {% for trip_plan in tripplan_list  %}
+        <li><a href="{% url 'tripplans-detail' trip_plan.pk %}" >{{trip_plan.name}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Brak gotowych planów</p>
+    {% endif %}
+{% endblock content %}

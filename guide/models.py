@@ -64,7 +64,11 @@ class ShoppingCart(models.Model):
 
 
 class TripPlan(models.Model):
+    name = models.CharField(_("Name"), max_length=150)
     creator = models.ForeignKey("Client", verbose_name=_(
-        "Creator"), on_delete=models.CASCADE, null=True)
+        "Creator"), on_delete=models.CASCADE, null=True, blank=True)
     attractions = models.ManyToManyField(
         "Attraction", verbose_name=_("Attraction list"))
+
+    def __str__(self):
+        return ''+self.name

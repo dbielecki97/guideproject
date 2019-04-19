@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}
+    {{tripplan.name}} details
+{% endblock title %}
+{% block content %}
+    <div id="map"></div>
+    <h2>{{tripplan.name}}</h2>
+    <h3>Atrakcje wchodzące w plan:</h3>
+    <ul>
+        {% for attraction in tripplan.attractions.all %}
+            <li><a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a></li>
+        {% endfor %}
+    </ul>
+    <button id="makeroute">Pokaż trasę</button>
+{% endblock content %}
+{% block scripts%}
+<script>
+    locs={{locationsInfo|safe}};
+</script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=tripPlanDetail">
+  </script>
+{% endblock scripts%}

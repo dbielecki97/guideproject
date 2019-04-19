@@ -57,8 +57,34 @@ class AttractionDetailView(DetailView):
 class TripPlanListView(ListView):
     model = TripPlan
 
+    def get_queryset(self):
+        return TripPlan.objects.filter(creator__isnull=True)
+
 
 class TripPlanDetailView(DetailView):
+    model = TripPlan
+
+    def getAttractionsInfo(self):
+        pos = []
+        for obj in self.object.attractions.all():
+            pos.append({"name": obj.name, "lat": obj.localization.latitude,
+                        "lng": obj.localization.longitude})
+        return pos
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["locationsInfo"] = self.getAttractionsInfo()
+        return context
+
+
+class MyTripPlanListView(ListView):
+    model = TripPlan
+
+    def get_queryset(self):
+        return TripPlan.objects.filter(creator=request.user)
+
+
+class MyTripPlanDetailView(DetailView):
     model = TripPlan
 
 

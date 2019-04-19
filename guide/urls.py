@@ -8,7 +8,10 @@ urlpatterns = [
          views.AttractionDetailView.as_view(), name='attraction-detail'),
     path('shoppingcard/<int:pk>',
          views.ShoppingCartDetailView.as_view(), name='shopping-cart'),
-    path('mytripplans/', views.TripPlanListView.as_view(), name='my-trip-plans'),
-    path('mytripplans/<int:pk>', views.TripPlanDetailView.as_view(),
-         name='trip-plan-detail'),
+    path('tripplans', views.TripPlanListView.as_view(), name='tripplans'),
+    path('tripplans/<int:pk>', views.TripPlanDetailView.as_view(),
+         name='tripplans-detail'),
+    path("mytripplans", views.MyTripPlanListView.as_view(), name="mytripplans"),
+    path("mytripplans/<int:pk>", views.MyTripPlanDetailView.as_view(),
+         name="mytripplans-detail"),
 ]

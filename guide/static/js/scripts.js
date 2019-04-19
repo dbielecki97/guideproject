@@ -1,6 +1,19 @@
 var directionsDisplay;
 var directionsService;
 var map
+markers = []
+function setMapOnAll(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+    }
+}
+function clearMarkers() {
+    setMapOnAll(null);
+}
+function deleteMarkers() {
+    clearMarkers();
+    markers = [];
+}
 function attractionList() {
     initMap();
     setMarkers(map, locs);
@@ -11,11 +24,22 @@ function attractionDetail() {
     setMarker(map, loc);
     directionsDisplay.setMap(map)
 }
+
+function tripPlanDetail() {
+    initMap();
+    markers = setMarkers(map, locs);
+    directionsDisplay.setMap(map)
+    start = { 'lat': locs[0]['lat'], 'lng': locs[0]['lng'] };
+    end = { 'lat': locs[1]['lat'], 'lng': locs[1]['lng'] };
+
+    $('#makeroute').click(() => { deleteMarkers(); calcRoute(start, end); });
+}
 function setMarkers(map, locs) {
-    var marker, i
+    var marker, i, markersArray = []
     for (i = 0; i < locs.length; i++) {
         var name = locs[i]['name'];
         marker = setMarker(map, locs[i], marker);
+        markersArray.push(marker)
         var infowindow = new google.maps.InfoWindow()
         google.maps.event.addListener(marker, 'click', (function (marker, name, infowindow) {
             return function () {
@@ -24,6 +48,7 @@ function setMarkers(map, locs) {
             };
         })(marker, name, infowindow));
     }
+    return markersArray
 }
 
 function setMarker(map, loc, marker) {
@@ -45,26 +70,13 @@ function initMap(zoom = 13, center = new google.maps.LatLng(53.12750505, 23.1470
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
 }
 
-function calcRoute(map) {
-    var start = new google.maps.LatLng(41.850033, -87.6500523);
-    var end = new google.maps.LatLng(37.3229978, -122.0321823);
-    var startMark = new google.maps.Marker({
-        position: start,
-        map: map,
-        title: "start"
-    });
-    var endMark = new google.maps.Marker({
-        position: end,
-        map: map,
-        title: "end"
-    });
-    var waypoints = [{ location: new google.maps.LatLng(44.986656, -93.258133) }, { location: new google.maps.LatLng(39.742043, -104.991531) }];
+function calcRoute(start, end, waypoints = []) {
+    var startLatLng = new google.maps.LatLng(start);
+    var endLatLng = new google.maps.LatLng(end);
     var request = {
-        origin: start,
-        destination: end,
-        travelMode: 'DRIVING',
-        waypoints: waypoints,
-
+        origin: startLatLng,
+        destination: endLatLng,
+        travelMode: 'WALKING',
     };
     directionsService.route(request, function (response, status) {
         if (status == 'OK') {
