@@ -4,14 +4,16 @@
 {% endblock title %}
 {% block content %}
     <div id="map"></div>
-    <h2>{{tripplan.name}}</h2>
-    <h3>Atrakcje wchodzące w plan:</h3>
-    <ul>
+    <center><h2>{{tripplan.name}}</h2></center>
+<center> <h3>Atrakcje wchodzące w plan:</h3></center>
         {% for attraction in tripplan.attractions.all %}
-            <li><a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a></li>
+              <center><div class="list-group" style="width: 60%;">
+  <a href="{% url 'attraction-detail' attraction.pk %}" class="list-group-item list-group-item-action">
+    {{attraction.name}}
+  </a>
+</div>
         {% endfor %}
-    </ul>
-    <button id="makeroute">Pokaż trasę</button>
+    <button id="makeroute" type="button" class="btn btn-primary">Pokaż trasę</button>
 {% endblock content %}
 {% block scripts%}
 <script>

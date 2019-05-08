@@ -1,5 +1,72 @@
 {% extends "base.html" %}
 {% block title %}Guide{% endblock %}
 {% block content %}
-
+<!--<style>
+.carousel{
+    background: #2f4357;
+    margin-top: 20px;
+}
+.carousel-item{
+    text-align: center;
+    min-height: 280px; /* Prevent carousel from being distorted if for some reason image doesn't load */
+}
+.bs-example{
+	margin: 20px;
+} -->
+<style>
+.carousel-item {
+  height: 90vh;
+  min-height: 350px;
+  background: no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+</style>
+ <!--<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Odkryj Białystok!</h1>
+    <p class="lead">Super strona pomoże ci poznać Białystok od super strony.</p>
+  </div>
+</div> -->
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+      <!-- Slide One - Set the background image for this slide in the line below -->
+      <div class="carousel-item active" style="background-image: url('https://images.pexels.com/photos/297755/pexels-photo-297755.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260')">
+        <div class="carousel-caption d-none d-md-block">
+          <h2 class="display-4"style="font-weight: bold">Zaplanuj trasę.</h2>
+          <p class="lead" style="font-weight: bold">Z nami ułożysz najlepszą trasę na swoją wycieczkę.</p>
+        </div>
+      </div>
+      <!-- Slide Two - Set the background image for this slide in the line below -->
+      <div class="carousel-item" style="background-image: url('https://hotelcristal.com.pl/wp-content/uploads/2019/02/bia%C5%82ystok-noc-hotel.jpg')">
+        <div class="carousel-caption d-none d-md-block">
+          <h2 class="display-4"style="font-weight: bold">Poznaj Białystok</h2>
+          <p class="lead"style="font-weight: bold">Zobacz najciekawsze lokalizacje i atrakcje.</p>
+        </div>
+      </div>
+      <!-- Slide Three - Set the background image for this slide in the line below -->
+      <div class="carousel-item" style="background-image: url('https://www.wykop.pl/cdn/c3201142/comment_T7qfGBB4CF1xxn0uusXwuaA9tkTWF0yB.jpg')">
+        <div class="carousel-caption d-none d-md-block">
+          <h2 class="display-4"style="font-weight: bold">Poznaj słynne osoby</h2>
+          <p class="lead"style="font-weight: bold">Król.</p>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+  </div>
 {% endblock %}

@@ -3,13 +3,16 @@
     Attractions
 {% endblock title %}    
 {% block content %}
-    <h1>Lista proponowanych planów</h1>
+    <center><h1>Lista proponowanych planów</h1></center>
     {% if tripplan_list %}
-        <ul>
         {% for trip_plan in tripplan_list  %}
-        <li><a href="{% url 'tripplans-detail' trip_plan.pk %}" >{{trip_plan.name}}</a></li>
+          <center><div class="list-group" style="width: 60%;">
+  <a href="{% url 'tripplans-detail' trip_plan.pk %}" class="list-group-item list-group-item-action">
+    {{trip_plan.name}}
+  </a>
+</div>
+</center>
         {% endfor %}
-        </ul>
     {% else %}
         <p>Brak gotowych planów</p>
     {% endif %}
