@@ -5,24 +5,41 @@
   <title>{% block title %}{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
   <div class="banner">
-  </div>
-  <nav class='menu'>
-    <ul class="list-no-bullet">
-      <li><a href={% url 'attractions' %}>Atrakcje</a></li>   
-      <li><a href={% url 'tripplans' %}>Gotowe plany</a></li>   
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{% url 'home' %}">Guideproject</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'attractions' %}">Atrakcje</a><span class="sr-only">(current)</span>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'tripplans' %}">Gotowe plany</a>
+      </li>
       {% if user.is_authenticated %}
-        <li>User: {{ user.get_username }}</li>
-        <li><a href="{% url 'mytripplans' %}">Moje plany podróży</a></li> 
-        <li><a href="{% url 'shopping-cart' %}">Koszyk</a></li> 
-        <li><a href="{% url 'logout'%}?next={% url 'home' %}">Logout</a></li> 
+         <li class="nav-item"><a class="nav-link">User: {{ user.get_username }}</li></a>
+        <li class="nav-item"><a class="nav-link" href="{% url 'mytripplans' %}">Moje plany podróży</a></li> 
+        <li class="nav-item"><a class="nav-link" href="{% url 'shopping-cart' %}">Koszyk</a></li> 
+        <li class = "nav-item"><a class="nav-link" href="{% url 'logout'%}?next={% url 'home' %}">Logout</a></li> 
       {% else %}
-        <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
+        <li class="nav-item"><a class = "nav-link" href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
       {% endif %}  
     </ul>
-  </nav> 
+  </div>
+</nav>
+  </div>
   <div class="content">
     {% block content %}
     {% endblock %}
