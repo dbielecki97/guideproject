@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}
+    Moje plany
+{% endblock title %}    
+{% block content %}
+    <h1>Lista twoich planów</h1>
+    {% if mytripplans %}
+        <ul>
+        {% for trip_plan in mytripplans  %}
+        <li><a href="{% url 'tripplans-detail' trip_plan.pk %}" >{{trip_plan.name}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Brak planów</p>
+    {% endif %}
+{% endblock content %}
