@@ -16,9 +16,6 @@ urlpatterns = [
          views.saveTripPlan, name='save-trip-plan'),
     path('tripplans', views.TripPlanListView.as_view(), name='trip-plans'),
     path('tripplan/<int:pk>', views.TripPlanDetailView.as_view(),
-         name='trip-plans-detail'),
+         name='trip-plan-detail'),
     path("mytripplans", views.MyTripPlanListView.as_view(), name="my-trip-plans"),
-    path("mytripplan/<int:pk>", views.MyTripPlanDetailView.as_view(),
-         name="my-trip-plans-detail"),
-
 ]
