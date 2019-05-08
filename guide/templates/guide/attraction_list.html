@@ -6,10 +6,11 @@
     <div id="map"></div>
     <h1><center>Lista wszystkich dostępnych atrakcji<center></h1>
     {% if attraction_list %}
+      <ul class="list-group">
         <center><ul style=" width:60%;">
-        {% for attraction in attraction_list  %}
-        <ul class="list-group">
-        <li class="list-group-item"><a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a></li>
+        {% for attraction in attraction_list  %}       
+        <li class="list-group-item"><a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a><a href="{% url 'add-attraction' attraction.pk %}">Dodaj do koszyka</a></li>
+        {% endfor %}
         </ul>
         {% endfor %}
         </ul></center>

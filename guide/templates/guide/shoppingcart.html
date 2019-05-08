@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if attractions %}
+        {% for attraction in attractions.all %}
+            <li><a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a><a href="{% url 'remove-attraction' attraction.pk %}">Usuń</a></li>
+        {% endfor %}
+    {% else %}
+        <p>Nie masz żadnych atrakcji w koszyku!</p>
+    {% endif %}
+{% endblock content %}

@@ -28,6 +28,20 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'tripplans' %}">Gotowe plany</a>
       </li>
+  </div>
+  <!-- <nav class='menu'>
+    <ul class="list-no-bullet">
+      <li><a href={% url 'attractions' %}>Atrakcje</a></li>   
+      <li><a href={% url 'tripplans' %}>Gotowe plany</a></li>   
+      {% if user.is_authenticated %}
+        <li>User: {{ user.get_username }}</li>
+        <li><a href="{% url 'mytripplans' %}">Moje plany podróży</a></li> 
+        <li><a href="{% url 'shopping-cart' %}">Koszyk</a></li> 
+        <li><a href="{% url 'logout'%}?next={% url 'home' %}">Logout</a></li> 
+      {% else %}
+        <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
+      {% endif %}  -->
+
     </ul>
   </div>
 </nav>
