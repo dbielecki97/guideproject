@@ -7,6 +7,8 @@ class Client(User):
     name = models.CharField(_("Name"), max_length=50, null=True, blank=True)
     surname = models.CharField(
         _("Surname"), max_length=50, null=True, blank=True)
+    shoppingcart = models.ForeignKey(
+        "ShoppingCart", verbose_name=_("Koszyk"), on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return ''+self.name+' '+self.surname
@@ -57,10 +59,8 @@ class Localization(models.Model):
 
 
 class ShoppingCart(models.Model):
-    owner = models.ForeignKey("Client", verbose_name=_(
-        "Owner"), on_delete=models.CASCADE)
     attractions = models.ManyToManyField(
-        "Attraction", verbose_name=_("Attraction list"))
+        "Attraction", verbose_name=_("Attraction list"), blank=True)
 
 
 class TripPlan(models.Model):

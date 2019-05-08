@@ -34,7 +34,7 @@ class AttractionDetailView(DetailView):
                "lng": self.object.localization.longitude}
         return pos
 
-    def getLongTimeNeededToSoghtsee(self):
+    def getLongTimeNeededToSightsee(self):
         hours = int(self.object.timeNeededToSightsee)
         minutes = int((self.object.timeNeededToSightsee % 1)*60)
         result = ''
@@ -49,7 +49,7 @@ class AttractionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['longTimeNeededToSightsee'] = self.getLongTimeNeededToSoghtsee()
+        context['longTimeNeededToSightsee'] = self.getLongTimeNeededToSightsee()
         context['locationInfo'] = self.getAttractionsInfo()
         return context
 
@@ -79,13 +79,16 @@ class TripPlanDetailView(DetailView):
 
 class MyTripPlanListView(ListView):
     model = TripPlan
+    template_name = "guide/mytripplan_list.html"
+    context_object_name = "mytripplans"
 
     def get_queryset(self):
-        return TripPlan.objects.filter(creator=request.user)
+        return TripPlan.objects.filter(creator=self.request.user)
 
 
 class MyTripPlanDetailView(DetailView):
     model = TripPlan
+    template_name = "mytripplan_detail.html"
 
 
 class ShoppingCartDetailView(DetailView):
