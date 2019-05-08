@@ -3,12 +3,34 @@
     {{attraction.name}} details
 {% endblock title %}
 {% block content %}
-    <h2>{{attraction.name}}</h2>
+    <h2><center>{{attraction.name}}</center></h2>
     <div id="map"></div>
-    <p>Opis: {{attraction.description}}</p>
-    <p>Lokalizacja: {{attraction.localization}}</p>
-    <p>Czas potrzebny na zwiedzanie: {{longTimeNeededToSightsee}}</p>
-    <p>Cena biletu: {{attraction.ticketCost}}zł</p>
+<div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h4>Opis</h4>
+        </div>        
+        <p>{{attraction.description}}</p>
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h4>Lokalizacja</h4>
+        </div>
+        <p>{{attraction.localization}}</p>
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h4>Czas potrzebny na zwiedzanie</h4>
+        </div>        
+        <p>{{longTimeNeededToSightsee}}</p>
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h4>Cena biletu</h4>
+        </div>        
+        <p>{{attraction.ticketCost}} zł</p>
+    </a>
+</div>
     <script type="text/javascript">
         loc={{locationInfo|safe}}
     </script>
