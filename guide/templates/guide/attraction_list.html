@@ -8,7 +8,7 @@
     {% if attraction_list %}
         <ul>
         {% for attraction in attraction_list  %}
-        <li><a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a></li>
+        <li><a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a><a href="{% url 'add-attraction' attraction.pk %}">Dodaj do koszyka</a></li>
         {% endfor %}
         </ul>
     {% else %}

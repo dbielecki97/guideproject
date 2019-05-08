@@ -4,11 +4,10 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Client(User):
-    name = models.CharField(_("Name"), max_length=50, null=True, blank=True)
+    name = models.CharField(_("Name"), max_length=50,
+                            null=True, blank=True, default="")
     surname = models.CharField(
-        _("Surname"), max_length=50, null=True, blank=True)
-    shoppingcart = models.ForeignKey(
-        "ShoppingCart", verbose_name=_("Koszyk"), on_delete=models.CASCADE, null=True, blank=True)
+        _("Surname"), max_length=50, null=True, blank=True, default="")
 
     def __str__(self):
         return ''+self.name+' '+self.surname
@@ -34,7 +33,7 @@ class Attraction(models.Model):
     categories = models.ManyToManyField(
         "Category")
     localization = models.ForeignKey(
-        "Localization", verbose_name=_("Address"), on_delete=models.SET_NULL, null=True)
+        "Localization", verbose_name=_("Address"), on_delete=models.CASCADE, null=True)
     timeNeededToSightsee = models.FloatField(
         _("Time neede to sightsee (in hours)"))
     ticketCost = models.FloatField(
@@ -46,7 +45,7 @@ class Attraction(models.Model):
 
 class Localization(models.Model):
     street = models.CharField(
-        _("Street"), max_length=100, help_text='Name of the street')
+        _("Street"), max_length=100, help_text='Name of the street', blank=True, default="")
     zipCode = models.CharField(
         _("Zipcode"), max_length=10, help_text='Zip code')
     city = models.CharField(_("City"), max_length=50)
@@ -59,6 +58,8 @@ class Localization(models.Model):
 
 
 class ShoppingCart(models.Model):
+    owner = models.ForeignKey("Client", verbose_name=_(
+        "właściciel"), on_delete=models.CASCADE)
     attractions = models.ManyToManyField(
         "Attraction", verbose_name=_("Attraction list"), blank=True)
 
