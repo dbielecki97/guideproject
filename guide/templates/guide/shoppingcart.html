@@ -1,10 +1,33 @@
 {% extends "base.html" %}
+{% block title %}
+    Tworzenia planu
+{% endblock title %}
 {% block content %}
+    <div id="map"></div>
     {% if attractions %}
+<center> <h3>Atrakcje wchodzące w plan:</h3></center>
         {% for attraction in attractions.all %}
-            <li><a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a><a href="{% url 'remove-attraction' attraction.pk %}">Usuń</a></li>
+            <li><a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a><a href="{% url 'remove-attraction' attraction.pk %}"><i class="fas fa-trash-alt"></i></a></li>
         {% endfor %}
+        <p>Całkowity czas: {{totalTime}}</p>
+        <p>Całkowity koszt: {{totalCost}}</p>
     {% else %}
         <p>Nie masz żadnych atrakcji w koszyku!</p>
     {% endif %}
+        <button id="makeroute" type="button" class="btn btn-primary">Pokaż trasę</button>
+        </br>
+        <form action="{% url 'save-trip-plan' shoppingcart.pk %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Zapisz">
+</form>
 {% endblock content %}
+
+{% block scripts%}
+<script>
+    locs={{locationsInfo|safe}};
+</script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=tripPlanDetail">
+  </script>
+{% endblock scripts%}

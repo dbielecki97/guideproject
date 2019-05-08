@@ -7,7 +7,7 @@
     {% if mytripplans %}
         <ul>
         {% for trip_plan in mytripplans  %}
-        <li><a href="{% url 'tripplans-detail' trip_plan.pk %}" >{{trip_plan.name}}</a></li>
+        <li><a href="{% url 'trip-plans-detail' trip_plan.pk %}" >{{trip_plan.name}}</a></li>
         {% endfor %}
         </ul>
     {% else %}

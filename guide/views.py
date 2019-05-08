@@ -2,57 +2,69 @@ from . import google_maps_api
 import simplejson
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
+from .forms import SaveTripPlanForm
 
 
 def home(request):
     return render(request, 'home.html')
 
 
+def getAttractionsInfo(attractions):
+    pos = []
+    for attraction in attractions:
+        pos.append({"name": attraction.name, "lat": attraction.localization.latitude,
+                    "lng": attraction.localization.longitude})
+    return pos
+
+
 class AttractionListView(ListView):
     model = Attraction
 
-    def getAttractionsInfo(self):
-        pos = []
-        for obj in self.object_list:
-            pos.append({"name": obj.name, "lat": obj.localization.latitude,
-                        "lng": obj.localization.longitude})
-        return pos
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["locationsInfo"] = simplejson.dumps(self.getAttractionsInfo())
+        context["locationsInfo"] = simplejson.dumps(
+            getAttractionsInfo(self.object_list))
         return context
+
+
+def getTimeAsFormattedString(time):
+    hours = int(time)
+    minutes = int((time % 1)*60)
+    result = ''
+    if hours:
+        result += str(hours) + ' godzin(-a/y) '
+    if minutes:
+        result += str(minutes) + ' minut(-a)'
+    return result
+
+
+def getFormattedCost(ammount):
+    formattedAmmound = ''
+    if ammount == 0:
+        formattedAmmound = 'Darmowe'
+    else:
+        formattedAmmound += str(ammount) + ' zł'
+    return formattedAmmound
 
 
 class AttractionDetailView(DetailView):
     model = Attraction
 
-    def getAttractionsInfo(self):
+    def getAttractionInfo(self):
         pos = {"name": self.object.name, "lat": self.object.localization.latitude,
                "lng": self.object.localization.longitude}
         return pos
 
-    def getLongTimeNeededToSightsee(self):
-        hours = int(self.object.timeNeededToSightsee)
-        minutes = int((self.object.timeNeededToSightsee % 1)*60)
-        result = ''
-        if hours:
-            if hours == 1:
-                result += str(hours) + ' godzina'
-            else:
-                result += str(hours) + ' godzin'
-        if minutes:
-            result += ' '+str(minutes) + ' minut'
-        return result
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['longTimeNeededToSightsee'] = self.getLongTimeNeededToSightsee()
-        context['locationInfo'] = self.getAttractionsInfo()
+        context['timeasformattedstring'] = getTimeAsFormattedString(
+            self.object.timeNeededToSightsee)
+        context['locationInfo'] = self.getAttractionInfo()
+        context['ticketCost'] = getFormattedCost(self.object.ticketCost)
         return context
 
 
@@ -93,13 +105,27 @@ class MyTripPlanDetailView(DetailView):
     template_name = "mytripplan_detail.html"
 
 
-def shoppingCartView(request):
-    shoppingCart = ShoppingCart.objects.get(owner=request.user)
-    attractions = shoppingCart.attractions.all
-    context = {
-        'attractions': attractions,
-    }
-    return render(request, 'guide/shoppingcart.html', context)
+class ShoppingCartView(TemplateView):
+    template_name = 'guide/shoppingcart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
+        attractions = shoppingCart.attractions.all()
+        totalTime = 0
+        totalCost = 0
+        for attraction in attractions:
+            totalTime += attraction.timeNeededToSightsee
+        for attraction in attractions:
+            totalCost += attraction.ticketCost
+        context['shoppingcart'] = shoppingCart
+        context['attractions'] = attractions
+        context['totalTime'] = getTimeAsFormattedString(totalTime)
+        context['totalCost'] = getFormattedCost(totalCost)
+        context['form'] = SaveTripPlanForm
+        context["locationsInfo"] = simplejson.dumps(
+            getAttractionsInfo(attractions))
+        return context
 
 
 def addAttraction(request, pk):
@@ -118,3 +144,16 @@ def removeAttraction(request, pk):
         ShoppingCart, owner=clientInstance)
     shoppingCartInstance.attractions.remove(attractionInstance)
     return HttpResponseRedirect(reverse('shopping-cart'))
+
+
+def saveTripPlan(request, pk):
+    if request.method == 'POST':
+        form = SaveTripPlanForm(request.POST)
+        if form.is_valid():
+            tripplan = TripPlan.objects.create(creator=Client.objects.get(
+                pk=request.user.pk), name=form.cleaned_data['name'])
+            tripplan.attractions.set(ShoppingCart.objects.get(
+                pk=pk).attractions.all())
+            tripplan.save()
+
+    return HttpResponseRedirect(reverse('my-trip-plans'))
