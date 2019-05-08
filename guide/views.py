@@ -1,8 +1,10 @@
 from . import google_maps_api
 import simplejson
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
 
 
@@ -91,5 +93,28 @@ class MyTripPlanDetailView(DetailView):
     template_name = "mytripplan_detail.html"
 
 
-class ShoppingCartDetailView(DetailView):
-    model = ShoppingCart
+def shoppingCartView(request):
+    shoppingCart = ShoppingCart.objects.get(owner=request.user)
+    attractions = shoppingCart.attractions.all
+    context = {
+        'attractions': attractions,
+    }
+    return render(request, 'guide/shoppingcart.html', context)
+
+
+def addAttraction(request, pk):
+    attractionInstance = get_object_or_404(Attraction, pk=pk)
+    clientInstance = get_object_or_404(Client, pk=request.user.pk)
+    shoppingCartInstance = get_object_or_404(
+        ShoppingCart, owner=clientInstance)
+    shoppingCartInstance.attractions.add(attractionInstance)
+    return HttpResponseRedirect(reverse('attractions'))
+
+
+def removeAttraction(request, pk):
+    attractionInstance = get_object_or_404(Attraction, pk=pk)
+    clientInstance = get_object_or_404(Client, pk=request.user.pk)
+    shoppingCartInstance = get_object_or_404(
+        ShoppingCart, owner=clientInstance)
+    shoppingCartInstance.attractions.remove(attractionInstance)
+    return HttpResponseRedirect(reverse('shopping-cart'))
