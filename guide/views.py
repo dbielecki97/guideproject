@@ -12,6 +12,7 @@ from .forms import SaveTripPlanForm, SignUpForm
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
 
+
 def home(request):
     return render(request, 'home.html')
 
@@ -81,16 +82,11 @@ class TripPlanListView(ListView):
 class TripPlanDetailView(DetailView):
     model = TripPlan
 
-    def getAttractionsInfo(self):
-        pos = []
-        for obj in self.object.attractions.all():
-            pos.append({"name": obj.name, "lat": obj.localization.latitude,
-                        "lng": obj.localization.longitude})
-        return pos
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["locationsInfo"] = self.getAttractionsInfo()
+        locationsInfo = getAttractionsInfo(self.object.attractions.all())
+        context["locationsInfo"] = locationsInfo
+        context["numberOfLocations"] = len(locationsInfo)
         return context
 
 
@@ -126,8 +122,11 @@ class ShoppingCartView(TemplateView):
         context['totalTime'] = getTimeAsFormattedString(totalTime)
         context['totalCost'] = getFormattedCost(totalCost)
         context['form'] = SaveTripPlanForm
+        attractionsInfo = getAttractionsInfo(attractions)
         context["locationsInfo"] = simplejson.dumps(
-            getAttractionsInfo(attractions))
+            attractionsInfo)
+        context['numberOfLocations'] = len(attractionsInfo)
+        print(len(attractionsInfo))
         return context
 
 
@@ -160,8 +159,6 @@ def saveTripPlan(request, pk):
             tripplan.save()
 
     return HttpResponseRedirect(reverse('my-trip-plans'))
-
-
 
 
 class SignUp(FormView):
