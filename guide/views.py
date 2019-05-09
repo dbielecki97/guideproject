@@ -1,13 +1,16 @@
 from . import google_maps_api
 import simplejson
 from django.utils import timezone
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView, TemplateView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
-from .forms import SaveTripPlanForm
+from .forms import SaveTripPlanForm, SignUpForm
 
+
+from django.views.generic import FormView
+from django.contrib.auth import authenticate, login
 
 def home(request):
     return render(request, 'home.html')
@@ -157,3 +160,19 @@ def saveTripPlan(request, pk):
             tripplan.save()
 
     return HttpResponseRedirect(reverse('my-trip-plans'))
+
+
+
+
+class SignUp(FormView):
+    form_class = SignUpForm
+    success_url = 'home'
+    template_name = 'registration/signup.html'
+
+    def form_valid(self, form):
+        form.save()
+        username = self.request.POST['username']
+        password = self.request.POST['password1']
+        user = authenticate(username=username, password=password)
+        login(self.request, user)
+        return redirect(self.success_url)
