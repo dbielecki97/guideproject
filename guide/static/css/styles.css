@@ -26,3 +26,24 @@ html,body{
 i{
     margin-left:10px;
 }
+button i{
+    font-size:24px;
+    color:black;
+    padding:0;
+    margin:0;
+}
+button:hover i{
+    color:white;
+}
+button:disabled:hover i{
+    color:black;
+}
+.binIcon{
+    color:#e10c0c;
+    font-size:24px;
+    margin-left:20px;
+    padding:0;
+}
+.binIcon:hover{
+    color:#b40d0d;
+}

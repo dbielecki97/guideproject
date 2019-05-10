@@ -42,6 +42,9 @@ class Attraction(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class Localization(models.Model):
     street = models.CharField(
@@ -72,4 +75,7 @@ class TripPlan(models.Model):
         "Attraction", verbose_name=_("Attraction list"))
 
     def __str__(self):
-        return ''+self.name
+        return '' + self.name
+
+    class Meta:
+        ordering = ['name']

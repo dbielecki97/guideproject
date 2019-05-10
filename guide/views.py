@@ -30,6 +30,10 @@ class AttractionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = Client.objects.get(pk=self.request.user.pk)
+        attractionNamesInCreator = ShoppingCart.objects.get(
+            owner=user).attractions.values_list('name', flat=True).all()
+        context["attractionNamesInCreator"] = attractionNamesInCreator
         context["locationsInfo"] = simplejson.dumps(
             getAttractionsInfo(self.object_list))
         return context
@@ -173,3 +177,8 @@ class SignUp(FormView):
         user = authenticate(username=username, password=password)
         login(self.request, user)
         return redirect(self.success_url)
+
+
+def removeMyPlan(request, pk):
+    tripPlan = get_object_or_404(TripPlan, pk=pk).delete()
+    return HttpResponseRedirect(reverse('my-trip-plans'))

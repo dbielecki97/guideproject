@@ -4,10 +4,17 @@
 {% endblock title %}
 {% block content %}
     {% if attractions %}
-    <div id="map"></div>
-<center> <h3>Atrakcje wchodzące w plan:</h3></center>
+        <div id="map"></div>
+        <center> 
+            <h3>Atrakcje wchodzące w plan:</h3>
+        </center>
         {% for attraction in attractions.all %}
-            <li><a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a><a href="{% url 'remove-attraction' attraction.pk %}"><i class="fas fa-trash-alt"></i></a></li>
+            <li>
+                <a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a>
+                <a href="{% url 'remove-attraction' attraction.pk %}">
+                    <i class="fas fa-trash-alt binIcon"></i>
+                </a>
+            </li>
         {% endfor %}
         <p>Całkowity czas: {{totalTime}}</p>
         <p>Całkowity koszt: {{totalCost}}</p>
@@ -16,10 +23,12 @@
         {% endif %}
         </br>
         <form action="{% url 'save-trip-plan' shoppingcart.pk %}" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Zapisz">
-</form>
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary">
+                <i class="far fa-save save"></i>
+            </button>
+        </form>
     {% else %}
         <p>Nie masz żadnych atrakcji w koszyku!</p>
     {% endif %}
@@ -29,7 +38,7 @@
 <script>
     locs={{locationsInfo|safe}};
 </script>
-    <script async defer
+<script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=tripPlanDetail">
   </script>
 {% endblock scripts%}
