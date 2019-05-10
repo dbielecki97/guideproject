@@ -11,18 +11,20 @@
         {% for attraction in attraction_list  %}
             <li class="list-group-item">
                 <a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a>
-                {% if  attraction.name not in attractionNamesInCreator%}
-                    <a href="{% url 'add-attraction' attraction.pk %}"">
-                        <button type="button" class="btn btn-primary">
-                            <i class="fas fa-shopping-basket basket"></i>
-                        </button>
-                    </a>
-                {% else %}
-                    <a href="#">
-                        <button type="button" class="btn btn-primary" disabled>
-                            <i class="fas fa-shopping-basket basket"></i>
-                        </button>
-                    </a>
+                {% if  user.is_authenticated%}
+                    {% if  attraction.name not in attractionNamesInCreator %}
+                        <a href="{% url 'add-attraction' attraction.pk %}"">
+                            <button type="button" class="btn btn-primary">
+                                <i class="fas fa-shopping-basket basket"></i>
+                            </button>
+                        </a>
+                    {% else %}
+                        <a href="#">
+                            <button type="button" class="btn btn-primary" disabled>
+                                <i class="fas fa-shopping-basket basket"></i>
+                            </button>
+                        </a>
+                    {% endif %}
                 {% endif %}
             </li>
         {% endfor %}

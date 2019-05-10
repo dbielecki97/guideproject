@@ -30,10 +30,11 @@ class AttractionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = Client.objects.get(pk=self.request.user.pk)
-        attractionNamesInCreator = ShoppingCart.objects.get(
-            owner=user).attractions.values_list('name', flat=True).all()
-        context["attractionNamesInCreator"] = attractionNamesInCreator
+        if self.request.user.pk:
+            user = Client.objects.get(pk=self.request.user.pk)
+            attractionNamesInCreator = ShoppingCart.objects.get(
+                owner=user).attractions.values_list('name', flat=True).all()
+            context["attractionNamesInCreator"] = attractionNamesInCreator
         context["locationsInfo"] = simplejson.dumps(
             getAttractionsInfo(self.object_list))
         return context
