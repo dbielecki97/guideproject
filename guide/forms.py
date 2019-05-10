@@ -7,19 +7,18 @@ class SaveTripPlanForm(forms.Form):
     name = forms.CharField(label='Nazwa planu', max_length=150)
 
 
+
 class SignUpForm(UserCreationForm):
-    name = forms.CharField(label='Firstname',max_length=50)
-    surname = forms.CharField(label='Surname', max_length=50)
+
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['password1'].help_text = ''
+            self.fields['username'].widget.attrs={'style': 'width: 100%'}
+            self.fields['password1'].widget.attrs={'style': 'width: 100%'}
+            self.fields['password2'].widget.attrs={'style': 'width: 100%'}
 
     class Meta:
         model = Client
-        fields = ("username", "name","surname", "password1", "password2")
+        fields = ("username", "password1", "password2")        
 
-        # @override save func from UserCreationForm
-        def save(self, commit=True):
-            user = super(UserCreationForm, self).save(commit=False)
-            user.name = self.cleaned_data["name"]
-            user.surname = self.cleaned_data["surname"]
-            if commit:
-                user.save()
-            return user 
+    

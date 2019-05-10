@@ -26,3 +26,7 @@ html,body{
 i{
     margin-left:10px;
 }
+.form-label-group:after {
+    content: "*";
+    color: red; 
+}

@@ -54,7 +54,7 @@ function setMarkers(map, locs) {
 function setMarker(map, loc, marker) {
     var latlngset = new google.maps.LatLng(loc['lat'], loc['lng']);
     marker = new google.maps.Marker({
-        map: map, name: loc['name'], position: latlngset
+        map: map, name: loc['name'], position: latlngset,
     });
     return marker;
 }
