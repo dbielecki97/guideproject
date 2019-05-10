@@ -7,7 +7,12 @@
     {% if mytripplans %}
         <ul>
         {% for trip_plan in mytripplans  %}
-        <li><a href="{% url 'trip-plan-detail' trip_plan.pk %}" >{{trip_plan.name}}</a></li>
+        <li>
+            <a href="{% url 'trip-plan-detail' trip_plan.pk %}" >{{trip_plan.name}}</a>
+            <a href="{% url 'remove-my-plan' trip_plan.pk %}">
+                <i class="fas fa-trash-alt binIcon"></i>
+            </a>
+        </li>
         {% endfor %}
         </ul>
     {% else %}

@@ -15,24 +15,31 @@ function deleteMarkers() {
     markers = [];
 }
 function attractionList() {
-    initMap();
-    setMarkers(map, locs);
-    directionsDisplay.setMap(map)
+    if (locs != []) {
+        initMap();
+        setMarkers(map, locs);
+        directionsDisplay.setMap(map)
+    }
 }
 function attractionDetail() {
-    initMap(15, new google.maps.LatLng(loc));
-    setMarker(map, loc);
-    directionsDisplay.setMap(map)
+    if (loc != []) {
+        initMap(15, new google.maps.LatLng(loc));
+        setMarker(map, loc);
+        directionsDisplay.setMap(map)
+    }
 }
 
 function tripPlanDetail() {
-    initMap();
-    markers = setMarkers(map, locs);
-    directionsDisplay.setMap(map)
-    start = { 'lat': locs[0]['lat'], 'lng': locs[0]['lng'] };
-    end = { 'lat': locs[1]['lat'], 'lng': locs[1]['lng'] };
-
-    $('#makeroute').click(() => { deleteMarkers(); calcRoute(start, end); });
+    if (locs != []) {
+        initMap();
+        markers = setMarkers(map, locs);
+        directionsDisplay.setMap(map)
+        if (locs.length >= 2) {
+            start = { 'lat': locs[0]['lat'], 'lng': locs[0]['lng'] };
+            end = { 'lat': locs[1]['lat'], 'lng': locs[1]['lng'] };
+            $('#makeroute').click(() => { deleteMarkers(); calcRoute(start, end); });
+        }
+    }
 }
 function setMarkers(map, locs) {
     var marker, i, markersArray = []
