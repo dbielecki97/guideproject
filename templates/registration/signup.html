@@ -16,7 +16,7 @@
                   {% for field in form.visible_fields %}
                     <div class="form-group">
                       {{ field.errors }}
-                      <div class="form-label-group font-weight-bold">
+                      <div class="required form-label-group font-weight-bold">
                         {{ field.label_tag }}
                       </div>
                       {{field}}

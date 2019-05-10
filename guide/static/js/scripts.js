@@ -93,3 +93,4 @@ function calcRoute(start, end, waypoints = []) {
         }
     });
 }
+
