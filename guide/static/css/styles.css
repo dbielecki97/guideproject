@@ -26,10 +26,6 @@ html,body{
 i{
     margin-left:10px;
 }
-.required:after {
-    content: "*";
-    color: red; 
-}
 button i{
     font-size:24px;
     color:black;
@@ -50,4 +46,8 @@ button:disabled:hover i{
 }
 .binIcon:hover{
     color:#b40d0d;
+}
+.required:after {
+    content: "*";
+    color: red; 
 }
