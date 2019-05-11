@@ -3,7 +3,41 @@
     Tworzenia planu
 {% endblock title %}
 {% block content %}
-    {% if attractions %}
+
+    <!-- Modal -->
+        {% if  availableattractions %}
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addAttraction">Dodaj atrakcję
+    </button>
+  <div class="modal fade" id="addAttraction" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Wybierz atrakcję do dodania</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+{% for attraction in availableattractions %}
+            <a href="{%url 'attraction-detail' attraction.pk%}">{{attraction.name}}</a>
+            <a href="{% url 'add-attraction' attraction.pk %}" class="btn btn-primary">
+                    <i class="fas fa-shopping-basket basket"></i>
+            </a>   
+            </br>         
+        {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  {% endif %}
+
+
+
+        {% if attractions  %}
         <div id="map"></div>
         <center> 
             <h3>Atrakcje wchodzące w plan:</h3>
@@ -11,8 +45,8 @@
         {% for attraction in attractions.all %}
             <li>
                 <a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a>
-                <a href="{% url 'remove-attraction' attraction.pk %}">
-                    <i class="fas fa-trash-alt binIcon"></i>
+                <a href="{% url 'remove-attraction' attraction.pk %}" class="btn btn-primary">
+                    <i class="fas fa-trash-alt"></i>
                 </a>
             </li>
         {% endfor %}
@@ -24,7 +58,7 @@
         </br>
         <form action="{% url 'save-trip-plan' shoppingcart.pk %}" method="post">
             {% csrf_token %}
-            {{ form }}
+            {{ saveform }}
             <button type="submit" class="btn btn-primary">
                 <i class="far fa-save save"></i>
             </button>

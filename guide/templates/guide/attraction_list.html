@@ -13,10 +13,8 @@
                 <a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a>
                 {% if  user.is_authenticated%}
                     {% if  attraction.name not in attractionNamesInCreator %}
-                        <a href="{% url 'add-attraction' attraction.pk %}"">
-                            <button type="button" class="btn btn-primary">
+                        <a href="{% url 'add-attraction' attraction.pk %}" class="btn btn-primary">
                                 <i class="fas fa-shopping-basket basket"></i>
-                            </button>
                         </a>
                     {% else %}
                         <a href="#">
