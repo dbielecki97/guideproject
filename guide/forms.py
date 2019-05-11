@@ -12,13 +12,15 @@ class SignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.fields['password1'].help_text = ''
+            self.fields['password1'].help_text = None
+            self.fields['username'].help_text = None
             self.fields['username'].widget.attrs={'style': 'width: 100%'}
             self.fields['password1'].widget.attrs={'style': 'width: 100%'}
             self.fields['password2'].widget.attrs={'style': 'width: 100%'}
 
     class Meta:
         model = Client
-        fields = ("username", "password1", "password2")        
+        fields = ("username", "password1", "password2")    
+
 
     

@@ -20,4 +20,6 @@ urlpatterns = [
     path("mytripplans", views.MyTripPlanListView.as_view(), name="my-trip-plans"),
     path('signup', views.SignUp.as_view(), name='signup'),
     path('removemyplan/<int:pk>', views.removeMyPlan, name='remove-my-plan'),
+    path('myaccount', views.accountManagement, name='my-account'),
+    path('myaccount/changepassword', views.change_password, name='change-password'),
 ]

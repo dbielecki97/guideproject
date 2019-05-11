@@ -7,7 +7,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
 from .forms import SaveTripPlanForm, SignUpForm
-
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
 
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
@@ -183,3 +185,23 @@ class SignUp(FormView):
 def removeMyPlan(request, pk):
     tripPlan = get_object_or_404(TripPlan, pk=pk).delete()
     return HttpResponseRedirect(reverse('my-trip-plans'))
+
+def accountManagement(request):
+    return render(request, 'account/myaccount.html')
+        
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'account/changepassword.html', {
+        'form': form
+    })
