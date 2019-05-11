@@ -241,9 +241,9 @@ def generalSettings(request):
         form = CustomUserChangeForm(request.POST, instance=user, initial = None)
         if form.is_valid():
             cd = form.cleaned_data
-            client.email = cd['email']
-            client.name = cd['name']
-            client.surname = cd['surname']
+            client.email = cd['email'] or ''
+            client.name = cd['name'] or ''
+            client.surname = cd['surname'] or ''
             client.save()
             return redirect('general')
     else:
