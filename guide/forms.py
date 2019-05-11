@@ -1,6 +1,6 @@
 from django import forms
 from guide.models import Client
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
 class SaveTripPlanForm(forms.Form):
@@ -23,4 +23,12 @@ class SignUpForm(UserCreationForm):
         fields = ("username", "password1", "password2")    
 
 
+class CustomUserChangeForm(UserChangeForm):
+    password = None
+    def __init__(self, *args, **kwargs):
+            super(CustomUserChangeForm, self).__init__(*args, **kwargs)
+            
+    class Meta:
+        model = Client
+        fields =('email', 'name', 'surname')
     

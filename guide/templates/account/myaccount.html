@@ -1,20 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container" style="margin-top: 3rem">
-  <div class="row">
-    <div class="col-3" style="margin-right: 1rem">
-      <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">General</a>
-        <a href="{% url 'change-password' %}" class="list-group-item list-group-item-action">Change password</a>
-        <a href="#" class="list-group-item list-group-item-action list-group-item-danger">Delete account</a>
+  {% if user.is_authenticated %}
+  <div class="container" style="margin-top: 2rem">
+    <div class="row">
+      <div class="col-3" style="margin-right: 1rem">
+        <div class="list-group">
+          <a href="{% url 'general' %}" class="list-group-item list-group-item-action">General</a>
+          <a href="{% url 'change-password' %}" class="list-group-item list-group-item-action">Change password</a>
+          <a href="#" class="list-group-item list-group-item-action list-group-item-danger">Delete account</a>
+        </div>
+      </div>
+      <div class="col-8"> 
+        {% block accountcontent %}
+        {% endblock %}
       </div>
     </div>
-    <div class="col-8"> 
-      {% block accountcontent %}
-      {% endblock %}
-    </div>
   </div>
-</div>
-
+  {% else %}
+    <h1>Log in first</h1>
+  {% endif %}
+  
 {% endblock %}

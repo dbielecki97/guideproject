@@ -1,10 +1,10 @@
 {% extends 'account/myaccount.html' %}
 
 {% block accountcontent %}
-    <h5>Change password</h5>
+    <h5>Your account: {{ request.user.username }}</h5>
     <hr/>
-    <form method="POST">
-        {% csrf_token %}
+        <form method="post">
+            {% csrf_token %}
         {% for field in form.visible_fields %}
             <div class="form-group">
                 {{ field.errors }}
@@ -15,5 +15,5 @@
             </div>
         {% endfor %}
         <button class="btn btn-outline-dark" style="margin-top: 1rem" type="submit">Save</button>
-    </form>
+        </form>
 {% endblock %}

@@ -6,13 +6,15 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
-from .forms import SaveTripPlanForm, SignUpForm
+from .forms import SaveTripPlanForm, SignUpForm, CustomUserChangeForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
+
+from django.contrib.auth.forms import UserChangeForm 
 
 
 def home(request):
@@ -197,11 +199,33 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('home')
+            return redirect('change-password')
         else:
             messages.error(request, 'Please correct the error below.')
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'account/changepassword.html', {
+        'form': form
+    })
+
+
+def generalSettings(request):
+    user = request.user
+    client = get_object_or_404(Client, pk=user.pk)
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=user, initial = None)
+        if form.is_valid():
+            cd = form.cleaned_data
+            client.email = cd['email']
+            client.name = cd['name']
+            client.surname = cd['surname']
+            client.save()
+            return redirect('general')
+    else:
+        form = CustomUserChangeForm(instance=user, initial={
+            'name': client.name,
+            'surname' : client.surname
+        })
+    return render(request, "account/general.html", {
         'form': form
     })
