@@ -1,11 +1,6 @@
 from django import forms
-<<<<<<< HEAD
-from guide.models import Client
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-=======
 from guide.models import Client, Attraction
-from django.contrib.auth.forms import UserCreationForm
->>>>>>> c757bf70e933ab581dc7ad7c0711008ce26145b2
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
 
@@ -28,7 +23,6 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = Client
-<<<<<<< HEAD
         fields = ("username", "password1", "password2")    
 
 
@@ -41,6 +35,3 @@ class CustomUserChangeForm(UserChangeForm):
         model = Client
         fields =('email', 'name', 'surname')
     
-=======
-        fields = ("username", "password1", "password2")
->>>>>>> c757bf70e933ab581dc7ad7c0711008ce26145b2

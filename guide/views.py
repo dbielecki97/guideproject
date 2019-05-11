@@ -6,11 +6,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
-<<<<<<< HEAD
-from .forms import SaveTripPlanForm, SignUpForm, CustomUserChangeForm
-=======
-from .forms import SaveTripPlanForm, SignUpForm, ChangeTripPlanNameForm
->>>>>>> c757bf70e933ab581dc7ad7c0711008ce26145b2
+from .forms import SaveTripPlanForm, SignUpForm, CustomUserChangeForm, ChangeTripPlanNameForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
@@ -227,14 +223,8 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-<<<<<<< HEAD
             messages.success(request, 'Your password was successfully updated!')
             return redirect('change-password')
-=======
-            messages.success(
-                request, 'Your password was successfully updated!')
-            return redirect('home')
->>>>>>> c757bf70e933ab581dc7ad7c0711008ce26145b2
         else:
             messages.error(request, 'Please correct the error below.')
     else:
