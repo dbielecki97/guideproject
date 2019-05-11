@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
-from .forms import SaveTripPlanForm, SignUpForm
+from .forms import SaveTripPlanForm, SignUpForm, ChangeTripPlanNameForm
 
 
 from django.views.generic import FormView
@@ -116,6 +116,8 @@ class ShoppingCartView(TemplateView):
         context = super().get_context_data(**kwargs)
         shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
         attractions = shoppingCart.attractions.all()
+        attractionPKs = attractions.values_list('pk')
+        availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
         totalTime = 0
         totalCost = 0
         for attraction in attractions:
@@ -126,12 +128,12 @@ class ShoppingCartView(TemplateView):
         context['attractions'] = attractions
         context['totalTime'] = getTimeAsFormattedString(totalTime)
         context['totalCost'] = getFormattedCost(totalCost)
-        context['form'] = SaveTripPlanForm
+        context['saveform'] = SaveTripPlanForm
+        context['availableattractions'] = availableAttractions
         attractionsInfo = getAttractionsInfo(attractions)
         context["locationsInfo"] = simplejson.dumps(
             attractionsInfo)
         context['numberOfLocations'] = len(attractionsInfo)
-        print(len(attractionsInfo))
         return context
 
 
@@ -141,7 +143,7 @@ def addAttraction(request, pk):
     shoppingCartInstance = get_object_or_404(
         ShoppingCart, owner=clientInstance)
     shoppingCartInstance.attractions.add(attractionInstance)
-    return HttpResponseRedirect(reverse('attractions'))
+    return HttpResponseRedirect(reverse('shopping-cart'))
 
 
 def removeAttraction(request, pk):
@@ -159,8 +161,9 @@ def saveTripPlan(request, pk):
         if form.is_valid():
             tripplan = TripPlan.objects.create(creator=Client.objects.get(
                 pk=request.user.pk), name=form.cleaned_data['name'])
-            tripplan.attractions.set(ShoppingCart.objects.get(
-                pk=pk).attractions.all())
+            shoppingcart = ShoppingCart.objects.get(pk=pk)
+            tripplan.attractions.set(shoppingcart.attractions.all())
+            shoppingcart.attractions.clear()
             tripplan.save()
 
     return HttpResponseRedirect(reverse('my-trip-plans'))
@@ -183,3 +186,24 @@ class SignUp(FormView):
 def removeMyPlan(request, pk):
     tripPlan = get_object_or_404(TripPlan, pk=pk).delete()
     return HttpResponseRedirect(reverse('my-trip-plans'))
+
+
+class EditPlanView(TemplateView):
+    template_name = "guide/edit_plan.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['trip_plan'] = TripPlan.objects.get(pk=kwargs['pk'])
+        context['changeNameForm'] = ChangeTripPlanNameForm
+        return context
+
+
+def changeNameOfPlan(request, pk):
+    if request.method == 'POST':
+        form = ChangeTripPlanNameForm(request.POST)
+        if form.is_valid():
+            tripplan = TripPlan.objects.get(pk=pk)
+            tripplan.name = form.cleaned_data['name']
+            tripplan.save()
+
+    return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': pk}))

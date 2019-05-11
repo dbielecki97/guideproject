@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{trip_plan.name}}
+{% endblock title %}
+
+{% block content %}
+    {{trip_plan.name}}
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#changeName">Zmień nazwę
+    </button>
+     <a href="{% url 'remove-my-plan' trip_plan.pk %}">
+                    <i class="fas fa-trash-alt binIcon"></i>
+                </a>
+
+  <!-- Modal -->
+  <div class="modal fade" id="changeName" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Zmień nazwę</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form action="{% url 'change-name' trip_plan.pk %}" method="post">
+            {% csrf_token %}
+            {{ changeNameForm }}
+            <button type="submit" class="btn btn-primary">
+                <i class="far fa-save save"></i>
+            </button>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+
+    {% for attraction in trip_plan.attractions.all %}
+            <li>
+                <a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a>
+                <a href="{% url 'remove-attraction' attraction.pk %}">
+                    <i class="fas fa-trash-alt binIcon"></i>
+                </a>
+            </li>
+        {% endfor %}
+
+{% endblock content %}

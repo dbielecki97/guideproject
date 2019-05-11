@@ -15,14 +15,14 @@ function deleteMarkers() {
     markers = [];
 }
 function attractionList() {
-    if (locs != []) {
+    if (locs.length != 0) {
         initMap();
         setMarkers(map, locs);
         directionsDisplay.setMap(map)
     }
 }
 function attractionDetail() {
-    if (loc != []) {
+    if (loc) {
         initMap(15, new google.maps.LatLng(loc));
         setMarker(map, loc);
         directionsDisplay.setMap(map)
@@ -30,7 +30,7 @@ function attractionDetail() {
 }
 
 function tripPlanDetail() {
-    if (locs != []) {
+    if (locs.length != 0) {
         initMap();
         markers = setMarkers(map, locs);
         directionsDisplay.setMap(map)
