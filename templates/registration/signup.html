@@ -3,6 +3,7 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
+<div class="bg">
   <form method="post" action="{% url 'signup' %}">
     <div class="container">
       <div class="row">
@@ -31,4 +32,5 @@
       </div>
     </div>
   </form>
+  </div>
 {% endblock %}
