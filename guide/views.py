@@ -6,8 +6,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
-from .forms import SaveTripPlanForm, SignUpForm, CustomUserChangeForm, ChangeTripPlanNameForm
-from django.contrib.auth.forms import PasswordChangeForm
+from .forms import SaveTripPlanForm, SignUpForm, CustomUserChangeForm, ChangeTripPlanNameForm, CustomPasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 
@@ -226,7 +225,7 @@ def accountManagement(request):
 
 def change_password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
@@ -236,7 +235,7 @@ def change_password(request):
         else:
             messages.error(request, 'Please correct the error below.')
     else:
-        form = PasswordChangeForm(request.user)
+        form = CustomPasswordChangeForm(request.user)
     return render(request, 'account/changepassword.html', {
         'form': form
     })
@@ -253,6 +252,8 @@ def generalSettings(request):
             client.name = cd['name'] or ''
             client.surname = cd['surname'] or ''
             client.save()
+            messages.success(
+                request, 'Your settings were successfully updated!')
             return redirect('general')
     else:
         form = CustomUserChangeForm(instance=user, initial={
@@ -260,5 +261,5 @@ def generalSettings(request):
             'surname': client.surname
         })
     return render(request, "account/general.html", {
-        'form': form
+        'form': form    
     })
