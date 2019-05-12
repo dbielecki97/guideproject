@@ -43,7 +43,7 @@
     {% for attraction in trip_plan.attractions.all %}
             <li>
                 <a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a>
-                <a href="{% url 'remove-attraction' attraction.pk %}">
+                <a href="{% url 'remove-attraction-from-plan' trip_plan.pk attraction.pk %}">
                     <i class="fas fa-trash-alt binIcon"></i>
                 </a>
             </li>

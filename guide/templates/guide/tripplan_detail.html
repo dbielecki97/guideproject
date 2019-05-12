@@ -4,6 +4,11 @@
 {% endblock title %}
 {% block content %}
     <div id="map"></div>
+    {% if tripplan.creator.pk == user.pk %}
+      <a href="{% url 'edit-my-plan' tripplan.pk %}">Edytuj</a>
+      <a href="{% url 'remove-my-plan' tripplan.pk%}">Usuń</a>
+      <a></a>
+    {% endif %}
     <center><h2>{{tripplan.name}}</h2></center>
 <center> <h3>Atrakcje wchodzące w plan:</h3></center>
         {% for attraction in tripplan.attractions.all %}

@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
 
-from django.contrib.auth.forms import UserChangeForm 
+from django.contrib.auth.forms import UserChangeForm
 
 
 def home(request):
@@ -150,13 +150,20 @@ def addAttraction(request, pk):
     return HttpResponseRedirect(reverse('shopping-cart'))
 
 
-def removeAttraction(request, pk):
+def removeAttractionFromShoppingCart(request, pk):
     attractionInstance = get_object_or_404(Attraction, pk=pk)
     clientInstance = get_object_or_404(Client, pk=request.user.pk)
     shoppingCartInstance = get_object_or_404(
         ShoppingCart, owner=clientInstance)
     shoppingCartInstance.attractions.remove(attractionInstance)
     return HttpResponseRedirect(reverse('shopping-cart'))
+
+
+def removeAttractionFromPlan(request, trip_pk, attr_pk):
+    attractionInstance = get_object_or_404(Attraction, pk=attr_pk)
+    tripplan = get_object_or_404(TripPlan, pk=trip_pk)
+    tripplan.attractions.remove(attractionInstance)
+    return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': trip_pk}))
 
 
 def saveTripPlan(request, pk):
@@ -223,7 +230,8 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, 'Your password was successfully updated!')
+            messages.success(
+                request, 'Your password was successfully updated!')
             return redirect('change-password')
         else:
             messages.error(request, 'Please correct the error below.')
@@ -238,7 +246,7 @@ def generalSettings(request):
     user = request.user
     client = get_object_or_404(Client, pk=user.pk)
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=user, initial = None)
+        form = CustomUserChangeForm(request.POST, instance=user, initial=None)
         if form.is_valid():
             cd = form.cleaned_data
             client.email = cd['email'] or ''
@@ -249,7 +257,7 @@ def generalSettings(request):
     else:
         form = CustomUserChangeForm(instance=user, initial={
             'name': client.name,
-            'surname' : client.surname
+            'surname': client.surname
         })
     return render(request, "account/general.html", {
         'form': form

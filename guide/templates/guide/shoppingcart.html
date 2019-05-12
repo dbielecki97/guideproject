@@ -45,7 +45,7 @@
         {% for attraction in attractions.all %}
             <li>
                 <a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a>
-                <a href="{% url 'remove-attraction' attraction.pk %}" class="btn btn-primary">
+                <a href="{% url 'remove-attraction-from-shopping-cart' attraction.pk %}" class="btn btn-primary">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </li>
