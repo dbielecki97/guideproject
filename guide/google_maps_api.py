@@ -22,4 +22,4 @@ def search_for_photo(photoreference):
 
 
 if __name__ == '__main__':
-    search_place("Pałac Branickich")
+    print(search_place("Pałac Branickich")['formatted_address'])

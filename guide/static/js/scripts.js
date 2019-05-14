@@ -22,9 +22,9 @@ function attractionList() {
     }
 }
 function attractionDetail() {
-    if (loc) {
-        initMap(15, new google.maps.LatLng(loc));
-        setMarker(map, loc);
+    if (loc[0]) {
+        initMap(15, new google.maps.LatLng(loc[0]['lat-lng']));
+        setMarker(map, loc[0]);
         directionsDisplay.setMap(map)
     }
 }
@@ -35,9 +35,13 @@ function tripPlanDetail() {
         markers = setMarkers(map, locs);
         directionsDisplay.setMap(map)
         if (locs.length >= 2) {
-            start = { 'lat': locs[0]['lat'], 'lng': locs[0]['lng'] };
-            end = { 'lat': locs[1]['lat'], 'lng': locs[1]['lng'] };
-            $('#makeroute').click(() => { deleteMarkers(); calcRoute(start, end); });
+            waypoints = [];
+            for (n = 1; n < locs.length - 1; n++) {
+                waypoints.push({ 'location': locs[n]['lat-lng'], 'stopover': true })
+            }
+            start = locs[0]['lat-lng'];
+            end = locs[locs.length - 1]['lat-lng'];
+            $('#makeroute').click(() => { deleteMarkers(); calcRoute(start, end, waypoints) });
         }
     }
 }
@@ -58,8 +62,8 @@ function setMarkers(map, locs) {
     return markersArray
 }
 
-function setMarker(map, loc, marker) {
-    var latlngset = new google.maps.LatLng(loc['lat'], loc['lng']);
+function setMarker(map, loc) {
+    var latlngset = new google.maps.LatLng(loc['lat-lng']);
     marker = new google.maps.Marker({
         map: map, name: loc['name'], position: latlngset,
     });
@@ -83,7 +87,9 @@ function calcRoute(start, end, waypoints = []) {
     var request = {
         origin: startLatLng,
         destination: endLatLng,
+        waypoints: waypoints,
         travelMode: 'WALKING',
+        optimizeWaypoints: true,
     };
     directionsService.route(request, function (response, status) {
         if (status == 'OK') {

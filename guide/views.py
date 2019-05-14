@@ -1,5 +1,6 @@
 from . import google_maps_api
 import simplejson
+import types
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView, TemplateView
@@ -20,12 +21,26 @@ def home(request):
     return render(request, 'home.html')
 
 
-def getAttractionsInfo(attractions):
-    pos = []
-    for attraction in attractions:
-        pos.append({"name": attraction.name, "lat": attraction.localization.latitude,
-                    "lng": attraction.localization.longitude})
-    return pos
+def extractInfo(attraction, info):
+    formattedInfo = {'name': attraction.name,
+                     'lat-lng': info['geometry']['location'], }
+    return formattedInfo
+
+
+def getInfoFromAPI(attractions):
+    attractionInfos = []
+    try:
+        for attraction in attractions:
+            info = google_maps_api.search_place(attraction.name)
+            attractionInfos.append(extractInfo(attraction, info))
+    except:
+        pass
+    try:
+        info = google_maps_api.search_place(attractions.name)
+        attractionInfos.append(extractInfo(attractions, info))
+    except:
+        pass
+    return attractionInfos
 
 
 class AttractionListView(ListView):
@@ -33,13 +48,13 @@ class AttractionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.pk:
+        print(self.request)
+        if self.request.user.is_authenticated:
             user = Client.objects.get(pk=self.request.user.pk)
             attractionNamesInCreator = ShoppingCart.objects.get(
                 owner=user).attractions.values_list('name', flat=True).all()
             context["attractionNamesInCreator"] = attractionNamesInCreator
-        context["locationsInfo"] = simplejson.dumps(
-            getAttractionsInfo(self.object_list))
+        context["attractionLocalizations"] = getInfoFromAPI(self.object_list)
         return context
 
 
@@ -66,16 +81,11 @@ def getFormattedCost(ammount):
 class AttractionDetailView(DetailView):
     model = Attraction
 
-    def getAttractionInfo(self):
-        pos = {"name": self.object.name, "lat": self.object.localization.latitude,
-               "lng": self.object.localization.longitude}
-        return pos
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['timeasformattedstring'] = getTimeAsFormattedString(
             self.object.timeNeededToSightsee)
-        context['locationInfo'] = self.getAttractionInfo()
+        context['attractionLocalization'] = getInfoFromAPI(self.object)
         context['ticketCost'] = getFormattedCost(self.object.ticketCost)
         return context
 
@@ -92,9 +102,9 @@ class TripPlanDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        locationsInfo = getAttractionsInfo(self.object.attractions.all())
-        context["locationsInfo"] = locationsInfo
-        context["numberOfLocations"] = len(locationsInfo)
+        attractionLocalizations = getInfoFromAPI(self.object.attractions.all())
+        context["attractionLocalizations"] = attractionLocalizations
+        context["numberOfLocations"] = len(attractionLocalizations)
         return context
 
 
@@ -105,11 +115,6 @@ class MyTripPlanListView(ListView):
 
     def get_queryset(self):
         return TripPlan.objects.filter(creator=self.request.user)
-
-
-class MyTripPlanDetailView(DetailView):
-    model = TripPlan
-    template_name = "mytripplan_detail.html"
 
 
 class ShoppingCartView(TemplateView):
@@ -133,10 +138,9 @@ class ShoppingCartView(TemplateView):
         context['totalCost'] = getFormattedCost(totalCost)
         context['saveform'] = SaveTripPlanForm
         context['availableattractions'] = availableAttractions
-        attractionsInfo = getAttractionsInfo(attractions)
-        context["locationsInfo"] = simplejson.dumps(
-            attractionsInfo)
-        context['numberOfLocations'] = len(attractionsInfo)
+        attractionLocalizations = getInfoFromAPI(attractions)
+        context["attractionLocalizations"] = attractionLocalizations
+        context['numberOfLocations'] = len(attractionLocalizations)
         return context
 
 
@@ -261,5 +265,5 @@ def generalSettings(request):
             'surname': client.surname
         })
     return render(request, "account/general.html", {
-        'form': form    
+        'form': form
     })
