@@ -14,5 +14,7 @@ def createShoppingCartForClient(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Attraction)
 def createAddPopulateLocalization(sender, instance, created, **kwargs):
     if created:
-        Localization.objects.create(formattedAddress=google_maps_api.search_place(
+        loc = Localization.objects.create(formattedAddress=google_maps_api.search_place(
             instance.name)['formatted_address'])
+        instance.localization = loc
+        instance.save()
