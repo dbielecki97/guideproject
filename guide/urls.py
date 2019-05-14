@@ -24,8 +24,7 @@ urlpatterns = [
     path('removemyplan/<int:pk>', views.removeMyPlan, name='remove-my-plan'),
     path('editmyplan/<int:pk>', views.EditPlanView.as_view(), name='edit-my-plan'),
     path('changename/<int:pk>', views.changeNameOfPlan, name='change-name'),
-    path('myaccount', views.accountManagement, name='my-account'),
-    path('myaccount/general', views.generalSettings, name='general'),
-    path('myaccount/changepassword', views.change_password, name='change-password'),
+    path('<user>', views.generalSettings, name='general'),
+    path('<user>/changepassword', views.change_password, name='change-password'),
 
 ]

@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
+from django.contrib.auth.models import User
 from .models import Attraction, TripPlan, Localization, Category, Client, ShoppingCart
 from .forms import SaveTripPlanForm, SignUpForm, CustomUserChangeForm, ChangeTripPlanNameForm, CustomPasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -223,11 +224,8 @@ def changeNameOfPlan(request, pk):
     return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': pk}))
 
 
-def accountManagement(request):
-    return render(request, 'account/myaccount.html')
-
-
-def change_password(request):
+def change_password(request, user):
+    user = get_object_or_404(User, pk=request.user.pk)
     if request.method == 'POST':
         form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -241,15 +239,16 @@ def change_password(request):
     else:
         form = CustomPasswordChangeForm(request.user)
     return render(request, 'account/changepassword.html', {
-        'form': form
+        'form': form,
+        'user': user
     })
 
 
-def generalSettings(request):
-    user = request.user
-    client = get_object_or_404(Client, pk=user.pk)
+def generalSettings(request, user):
+    user = get_object_or_404(User, pk=request.user.pk)
+    client = get_object_or_404(Client, pk=request.user.pk)
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=user, initial=None)
+        form = CustomUserChangeForm(request.POST, instance=request.user, initial=None)
         if form.is_valid():
             cd = form.cleaned_data
             client.email = cd['email'] or ''
@@ -260,10 +259,11 @@ def generalSettings(request):
                 request, 'Your settings were successfully updated!')
             return redirect('general')
     else:
-        form = CustomUserChangeForm(instance=user, initial={
+        form = CustomUserChangeForm(instance=request.user, initial={
             'name': client.name,
             'surname': client.surname
         })
     return render(request, "account/general.html", {
-        'form': form
+        'form': form,
+        'user': user
     })
