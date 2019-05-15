@@ -1,4 +1,5 @@
 import requests
+import imghdr
 key = 'AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg'
 
 
@@ -18,7 +19,7 @@ def search_for_photo(photoreference):
     photo_payload = {"key": key, "photoreference": photoreference,
                      "maxheight": 500, "maxwidth": 500}
     photo_req = requests.get(photo_url, params=photo_payload)
-    return photo_req.content
+    return photo_req
 
 
 if __name__ == '__main__':
