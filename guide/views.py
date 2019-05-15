@@ -224,8 +224,7 @@ def changeNameOfPlan(request, pk):
     return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': pk}))
 
 
-def change_password(request, user):
-    user = get_object_or_404(User, pk=request.user.pk)
+def change_password(request):
     if request.method == 'POST':
         form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -239,13 +238,11 @@ def change_password(request, user):
     else:
         form = CustomPasswordChangeForm(request.user)
     return render(request, 'account/changepassword.html', {
-        'form': form,
-        'user': user
+        'form': form
     })
 
 
-def generalSettings(request, user):
-    user = get_object_or_404(User, pk=request.user.pk)
+def generalSettings(request):
     client = get_object_or_404(Client, pk=request.user.pk)
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user, initial=None)
@@ -264,6 +261,5 @@ def generalSettings(request, user):
             'surname': client.surname
         })
     return render(request, "account/general.html", {
-        'form': form,
-        'user': user
+        'form': form
     })
