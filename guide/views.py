@@ -23,19 +23,22 @@ import sys
 def home(request):
     return render(request, 'home.html')
 
+
 def getPhotoFromApi(photoreference, name):
     photo_req = google_maps_api.search_for_photo(photoreference)
     photo_type = imghdr.what("", photo_req.content)
     photo_name = name + "." + photo_type
-    with open("guide/static/images/" + photo_name, "wb+") as photo:
-        photo.write(photo_req.content)
+    try:
+        open("guide/static/images/" + photo_name, "r")
+    except FileNotFoundError:
+        with open("guide/static/images/" + photo_name, "wb+") as photo:
+            photo.write(photo_req.content)
     return photo_name
 
 
 def extractInfo(attraction, info):
     formattedInfo = {'name': attraction.name,
                      'lat-lng': info['geometry']['location'],
-                     'photoreference': info['photos'][0]['photo_reference'],
                      'photo': getPhotoFromApi(info['photos'][0]['photo_reference'], attraction.name)
                      }
     return formattedInfo
@@ -62,7 +65,6 @@ class AttractionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.request)
         if self.request.user.is_authenticated:
             user = Client.objects.get(pk=self.request.user.pk)
             attractionNamesInCreator = ShoppingCart.objects.get(
@@ -258,7 +260,8 @@ def change_password(request):
 def generalSettings(request):
     client = get_object_or_404(Client, pk=request.user.pk)
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user, initial=None)
+        form = CustomUserChangeForm(
+            request.POST, instance=request.user, initial=None)
         if form.is_valid():
             cd = form.cleaned_data
             client.email = cd['email'] or ''
