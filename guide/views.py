@@ -1,4 +1,5 @@
 from . import google_maps_api
+import imghdr
 import simplejson
 import types
 from django.utils import timezone
@@ -16,15 +17,27 @@ from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
 
 from django.contrib.auth.forms import UserChangeForm
+import sys
 
 
 def home(request):
     return render(request, 'home.html')
 
+def getPhotoFromApi(photoreference, name):
+    photo_req = google_maps_api.search_for_photo(photoreference)
+    photo_type = imghdr.what("", photo_req.content)
+    photo_name = name + "." + photo_type
+    with open("guide/static/images/" + photo_name, "wb+") as photo:
+        photo.write(photo_req.content)
+    return photo_name
+
 
 def extractInfo(attraction, info):
     formattedInfo = {'name': attraction.name,
-                     'lat-lng': info['geometry']['location'], }
+                     'lat-lng': info['geometry']['location'],
+                     'photoreference': info['photos'][0]['photo_reference'],
+                     'photo': getPhotoFromApi(info['photos'][0]['photo_reference'], attraction.name)
+                     }
     return formattedInfo
 
 

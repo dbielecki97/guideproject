@@ -50,11 +50,12 @@ background: linear-gradient(to bottom, #514A9D, #24C6DC); /* W3C, IE 10+/ Edge, 
 	<div class="row">
 		<div id="map"></div>
 		<div class="col-md-12 listing-block">
+            {% load static %}
 			{% for attraction in attraction_list %}
         <div class="media">
             <div class="fav-box"><i class="fa fa-heart-o" aria-hidden="true"></i>
 </div>
-              <img class="d-flex align-self-start" src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?h=350&auto=compress&cs=tinysrgb" alt="Generic placeholder image">
+              <img class="d-flex align-self-start" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="Generic placeholder image">
               <div class="media-body pl-3">
                 <div class="price"><a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a><small>{{attraction.localization}}</small></div>
                 <div class="stats">
