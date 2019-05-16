@@ -26,5 +26,4 @@ urlpatterns = [
     path('changename/<int:pk>', views.changeNameOfPlan, name='change-name'),
     path('myaccount/general', views.generalSettings, name='general'),
     path('myaccount/changepassword', views.change_password, name='change-password')
-
 ]

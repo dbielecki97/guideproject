@@ -1,35 +1,40 @@
-html,body{
-    width:100vw;
-    margin:0;
-    padding:0;
+html,
+body {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
 }
-.footer{
-    padding:0;
-    margin:0;
+
+.footer {
+    padding: 0;
+    margin: 0;
     position: fixed;
-    bottom:0;
-    height:30px;
+    bottom: 0;
+    height: 30px;
     line-height: 30px;
     font-size: 15px;
     text-align: center;
-    width:100vw;
-}
-.list-no-bullet{
-    list-style-type: none;
-}
-#map{
-    padding:0;
-    margin:0;
-    width:100%;
-    height: 400px;
+    width: 100vw;
 }
 
-i{
-    margin-left:10px;
+.list-no-bullet {
+    list-style-type: none;
 }
+
+#map {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 600px;
+}
+
+i {
+    margin-left: 10px;
+}
+
 .required:after {
     content: "*";
-    color: red; 
+    color: red;
 }
 
 .bg {
@@ -38,4 +43,4 @@ i{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-  }
+}

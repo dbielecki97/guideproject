@@ -1,77 +1,58 @@
 {% extends "base.html" %}
+
 {% block title %}
-    Attractions
+    Atrakcje
 {% endblock title %}    
+
 {% block content %}
 <style>
-@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700');
-
-h2{float:left; width:100%; color:#fff; margin-bottom:40px; font-size: 14px; position:relartive; z-index:3; margin-top:30px}
-h2 span{font-family: 'Libre Baskerville', serif; display:block; font-size:45px; text-transform:none; margin-bottom:20px; margin-top:30px; font-weight:700}
-h2 a{color:#fff; font-weight:bold;}
-
-body{background: #24C6DC;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to bottom, #514A9D, #24C6DC);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to bottom, #514A9D, #24C6DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-.head{float:left;width:100%;}
-.search-box{width:90%; margin:0 auto 40px; box-shadow:10px 13px 0 rgba(0,0,0,0.2);}
-.listing-block{background:#fff; height:500px; padding-top:20px; overflow-y:scroll;}
-.slimScrollDiv{width:100%!important;}
-.media {background:#fff; position:relative; margin-bottom:15px;}
-.media img{width:200px;margin:0; height:136px;}
-.media-body{border:1px solid #bcbcbc; border-left:0; height:136px;}
-.media .price{float:left; width:100%; font-size:30px;font-weight:600; color:#4765AB;}
-.media .price small{display:block; font-size:17px; color:#232323;}
-.media .stats{float:left; width:100%; margin-top:10px;}
-.media .stats span{float:left; margin-right:10px; font-size:15px;}
-.media .stats span i{margin-right:7px; color:#4765AB;}
-.media .address{float:left; width:100%;font-size:14px; margin-top:5px; color:#888;}
-.media .fav-box{position:absolute; right:10px; font-size:20px; top:4px; color:#E74C3C;}
-
-.map-box{background-color:#A3CCFF;}
- 
+@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700'); 
+.listing-block{background:#fff;height:600px;overflow-y:scroll;}
+.atr-list{margin-bottom:10px;border-color:#C0C0C0;background-color: #FAF9F8 ;width:100%;}
+.atr-list:hover{background-color: #E8E8E8;}
 </style>
-<!------ Include the above in your HEAD tag ---------->
 
 <section class="head">
     <div class="container">
         <h3 class="text-center"><span>Lista dostepnych atrakcji</span></h2>
     </div>
 </section>
-<div class="clearfix"></div>
-{% if attraction_list %}
-<section class="search-box">
-    <div class="container-fluid">
-	<div class="row">
-		<div id="map"></div>
-		<div class="col-md-12 listing-block">
-            {% load static %}
-			{% for attraction in attraction_list %}
-        <div class="media">
-            <div class="fav-box"><i class="fa fa-heart-o" aria-hidden="true"></i>
-</div>
-              <img class="d-flex align-self-start" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="Generic placeholder image">
-              <div class="media-body pl-3">
-                <div class="price"><a href="{% url 'attraction-detail' attraction.pk %}" >{{attraction.name}}</a><small>{{attraction.localization}}</small></div>
-                <div class="stats">
-                    <span><i class="fa fa-clock-o"></i>{{attraction.timeNeededToSightsee}} h</span>
-                    <span><i class="fa fa-money"></i>{{attraction.ticketCost}} zł</span>
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-4">
+            {% if attraction_list %}
+                {% load static %}
+                <div class="listing-block">
+                    {% for attraction in attraction_list %}
+                    <button href="{% url 'attraction-detail' attraction.pk %}" class="atr-list media-object btn btn-light">
+                        <div class="media">
+                            <img class="mr-3" style="width: 128px; height: 80px"src="{% static "images/" %}{{attraction.name}}.jpeg" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <div class="con" style="float:left; width:85%"><h5 class="mt-3 text-left">{{attraction.name}}</h5>
+                                    <div class="stats text-left">
+                                        <span><i class="fa fa-clock-o"></i> {{attraction.timeNeededToSightsee}} h</span>
+                                        <span><i class="fa fa-money"></i> {{attraction.ticketCost}} zł</span>
+                                    </div>
+                                </div>
+                                <div class="plus-icon" style="float:left;">
+                                    <a href="{% url 'add-attraction' attraction.pk %}"><i class="fas fa-plus-square" style="font-size:30px;color:#2F2F2F;width:15%;" href="#"></i></a>
+                                </div>
+                            </div>
+                        </div>  
+                    </button>
+                    {% endfor %}
+                    
                 </div>
-                <div class="address">{{attraction.description}}</div>
-              </div>
-            </div>
-            {% endfor %}
             {% endif %}
-   
-		</div>
-	</div>
-</div>
+        </div>
+        <div class="col">
+		    <div id="map"></div>
+        </div>  
+    </div>
 </section>
 
-
-
 {% endblock content %}
+
 {% block scripts%}
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=attractionList">
@@ -81,7 +62,7 @@ background: linear-gradient(to bottom, #514A9D, #24C6DC); /* W3C, IE 10+/ Edge, 
         locs={{attractionLocalizations|safe}};
     $(function(){
     $('.listing-block').slimScroll({
-        height: '500px'
+        height: '600px'
     });
 });
 </script>
