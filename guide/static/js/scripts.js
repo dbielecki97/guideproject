@@ -2,6 +2,11 @@ var directionsDisplay;
 var directionsService;
 var map
 markers = []
+
+function round(value, decimals = 0) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
+
 function setMapOnAll(map) {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(map);
@@ -35,13 +40,7 @@ function tripPlanDetail() {
         markers = setMarkers(map, locs);
         directionsDisplay.setMap(map)
         if (locs.length >= 2) {
-            waypoints = [];
-            for (n = 1; n < locs.length - 1; n++) {
-                waypoints.push({ 'location': locs[n]['lat-lng'], 'stopover': true })
-            }
-            start = locs[0]['lat-lng'];
-            end = locs[locs.length - 1]['lat-lng'];
-            $('#makeroute').click(() => { deleteMarkers(); calcRoute(start, end, waypoints) });
+            $('#makeroute').click(() => { deleteMarkers(); calcRoute() });
         }
     }
 }
@@ -49,7 +48,7 @@ function setMarkers(map, locs) {
     var marker, i, markersArray = []
     for (i = 0; i < locs.length; i++) {
         var name = locs[i]['name'];
-        marker = setMarker(map, locs[i], marker);
+        marker = setMarker(map, locs[i]);
         markersArray.push(marker)
         var infowindow = new google.maps.InfoWindow()
         google.maps.event.addListener(marker, 'click', (function (marker, name, infowindow) {
@@ -81,12 +80,18 @@ function initMap(zoom = 13, center = new google.maps.LatLng(53.12750505, 23.1470
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
 }
 
-function calcRoute(start, end, waypoints = []) {
-    var startLatLng = new google.maps.LatLng(start);
-    var endLatLng = new google.maps.LatLng(end);
+function calcRoute() {
+    waypoints = [];
+    start = document.getElementById('start').value
+    end = document.getElementById('end').value
+    for (n = 0; n < locs.length; n++) {
+        if (locs[n]['name'] == start || locs[n]['name'] == end)
+            continue;
+        waypoints.push({ 'location': locs[n]['lat-lng'], 'stopover': true })
+    }
     var request = {
-        origin: startLatLng,
-        destination: endLatLng,
+        origin: document.getElementById('start').value,
+        destination: document.getElementById('end').value,
         waypoints: waypoints,
         travelMode: 'WALKING',
         optimizeWaypoints: true,
@@ -94,6 +99,24 @@ function calcRoute(start, end, waypoints = []) {
     directionsService.route(request, function (response, status) {
         if (status == 'OK') {
             directionsDisplay.setDirections(response);
+            var route = response.routes[0];
+            totalWalkingTime = 0;
+            totalWalkingDistance = 0;
+            for (var i = 0; i < route.legs.length; i++) {
+                totalWalkingDistance += route.legs[i]['distance']['value']
+                totalWalkingTime += route.legs[i]['duration']['value']
+            }
+            hoursTag = document.getElementById('totalTime_hours');
+            minutesTag = document.getElementById('totalTime_minutes');
+            totalDistance = document.getElementById('totalDistance');
+            totalDistance.innerHTML = "Całkowita droga do przejścia: " + round(totalWalkingDistance / 1000, 2) + " km";
+            totalTime = hours + minutes / 60;
+            totalTime += totalWalkingTime / 3600;
+            console.log(totalTime)
+            h = totalTime - totalTime % 1;
+            m = round((totalTime - h) * 60)
+            hoursTag.innerHTML = h;
+            minutesTag.innerHTML = m;
         } else {
             alert("directions request failed, status=" + status)
         }

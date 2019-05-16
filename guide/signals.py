@@ -12,9 +12,10 @@ def createShoppingCartForClient(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Attraction)
-def createAddPopulateLocalization(sender, instance, created, **kwargs):
+def populateAttractionsGeoCoordinates(sender, instance, created, **kwargs):
     if created:
-        loc = Localization.objects.create(formattedAddress=google_maps_api.search_place(
-            instance.name)['formatted_address'])
-        instance.localization = loc
-        instance.save()
+        apiResponse = google_maps_api.search_place(
+            ''+instance.name+' '+instance.localization.street+''+instance.localization.zipCode+' '+instance.localization.city)
+        instance.localization.lattitude = apiResponse['geometry']['location']['lat']
+        instance.localization.longitude = apiResponse['geometry']['location']['lng']
+        instance.localization.save()
