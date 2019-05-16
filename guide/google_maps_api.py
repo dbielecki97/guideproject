@@ -14,13 +14,5 @@ def search_place(query):
     return search_json['results'][0]
 
 
-def search_for_photo(photoreference):
-    photo_url = 'https://maps.googleapis.com/maps/api/place/photo?'
-    photo_payload = {"key": key, "photoreference": photoreference,
-                     "maxheight": 500, "maxwidth": 500}
-    photo_req = requests.get(photo_url, params=photo_payload)
-    return photo_req
-
-
 if __name__ == '__main__':
     print(search_place('Rynek Kościuszki'))

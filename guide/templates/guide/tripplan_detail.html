@@ -18,13 +18,31 @@
   </a>
 </div>
         {% endfor %}
+        <p>Całkowity czas zwiedzania: <span id="totalTime_hours">{{hours}}</span> godziny <span id="totalTime_minutes">{{minutes}}</span> minut<p>
+        <p>Całkowity koszy zwiedzania: {{totalPrice}}<p>
+        <p id="totalDistance"><p>
+        
         {% if numberOfLocations > 1 %}
+        <span>Początek wycieczki: </span>
+        <select id="start">
+          {% for attraction in attractionLocalizations  %}
+            <option value="{{attraction.name}}">{{attraction.name}}</option>
+          {% endfor %}
+        </select>
+        <span>Koniec wycieczki: </span>
+        <select id="end">
+          {% for attraction in attractionLocalizations  %}
+            <option value="{{attraction.name}}">{{attraction.name}}</option>
+          {% endfor %}
+        </select>
          <button id="makeroute" type="button" class="btn btn-primary"><i class="fas fa-route route"></i></button>
         {% endif %}
 {% endblock content %}
 {% block scripts%}
 <script>
     locs={{attractionLocalizations|safe}};
+    hours={{hours|safe}};
+    minutes={{minutes|safe}};
 </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=tripPlanDetail">

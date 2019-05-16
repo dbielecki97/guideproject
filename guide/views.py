@@ -1,3 +1,4 @@
+import math
 from . import google_maps_api
 import imghdr
 import simplejson
@@ -24,40 +25,21 @@ def home(request):
     return render(request, 'home.html')
 
 
-def getPhotoFromApi(photoreference, name):
-    photo_req = google_maps_api.search_for_photo(photoreference)
-    photo_type = imghdr.what("", photo_req.content)
-    photo_name = name + "." + photo_type
+def extractInfo(attractionList):
+    formattedInfo = []
     try:
-        open("guide/static/images/" + photo_name, "r")
-    except FileNotFoundError:
-        with open("guide/static/images/" + photo_name, "wb+") as photo:
-            photo.write(photo_req.content)
-    return photo_name
-
-
-def extractInfo(attraction, info):
-    formattedInfo = {'name': attraction.name,
-                     'lat-lng': info['geometry']['location'],
-                     'photo': getPhotoFromApi(info['photos'][0]['photo_reference'], attraction.name)
-                     }
-    return formattedInfo
-
-
-def getInfoFromAPI(attractions):
-    attractionInfos = []
-    try:
-        for attraction in attractions:
-            info = google_maps_api.search_place(attraction.name)
-            attractionInfos.append(extractInfo(attraction, info))
+        for attraction in attractionList:
+            formattedInfo.append({'name': attraction.name,
+                                  'lat-lng': {'lat': attraction.localization.lattitude, 'lng': attraction.localization.longitude}})
+        return formattedInfo
     except:
         pass
     try:
-        info = google_maps_api.search_place(attractions.name)
-        attractionInfos.append(extractInfo(attractions, info))
+        formattedInfo.append({'name': attractionList.name,
+                              'lat-lng': {'lat': attractionList.localization.lattitude, 'lng': attractionList.localization.longitude}})
+        return formattedInfo
     except:
         pass
-    return attractionInfos
 
 
 class AttractionListView(ListView):
@@ -70,7 +52,7 @@ class AttractionListView(ListView):
             attractionNamesInCreator = ShoppingCart.objects.get(
                 owner=user).attractions.values_list('name', flat=True).all()
             context["attractionNamesInCreator"] = attractionNamesInCreator
-        context["attractionLocalizations"] = getInfoFromAPI(self.object_list)
+        context["attractionLocalizations"] = extractInfo(self.object_list)
         return context
 
 
@@ -101,7 +83,7 @@ class AttractionDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['timeasformattedstring'] = getTimeAsFormattedString(
             self.object.timeNeededToSightsee)
-        context['attractionLocalization'] = getInfoFromAPI(self.object)
+        context['attractionLocalization'] = extractInfo(self.object)
         context['ticketCost'] = getFormattedCost(self.object.ticketCost)
         return context
 
@@ -113,14 +95,32 @@ class TripPlanListView(ListView):
         return TripPlan.objects.filter(creator__isnull=True)
 
 
+def getTotalPrice(attractions):
+    totalPrice = 0
+    for attraction in attractions:
+        totalPrice += attraction.ticketCost
+    return totalPrice
+
+
+def getTotalTime(attractions):
+    totalTime = 0
+    for attraction in attractions:
+        totalTime += attraction.timeNeededToSightsee
+    return math.floor(totalTime), round((totalTime-math.floor(totalTime))*60)
+
+
 class TripPlanDetailView(DetailView):
     model = TripPlan
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        attractionLocalizations = getInfoFromAPI(self.object.attractions.all())
+        attractionLocalizations = extractInfo(self.object.attractions.all())
         context["attractionLocalizations"] = attractionLocalizations
         context["numberOfLocations"] = len(attractionLocalizations)
+        hours, minutes = getTotalTime(self.object.attractions.all())
+        context['hours'] = hours
+        context['minutes'] = minutes
+        context['totalPrice'] = getTotalPrice(self.object.attractions.all())
         return context
 
 
@@ -154,7 +154,7 @@ class ShoppingCartView(TemplateView):
         context['totalCost'] = getFormattedCost(totalCost)
         context['saveform'] = SaveTripPlanForm
         context['availableattractions'] = availableAttractions
-        attractionLocalizations = getInfoFromAPI(attractions)
+        attractionLocalizations = extractInfo(attractions)
         context["attractionLocalizations"] = attractionLocalizations
         context['numberOfLocations'] = len(attractionLocalizations)
         return context

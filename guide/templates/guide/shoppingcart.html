@@ -50,11 +50,8 @@
                 </a>
             </li>
         {% endfor %}
-        <p>Całkowity czas: {{totalTime}}</p>
+        <p>Czas zwiedzania: {{totalTime}}</p>
         <p>Całkowity koszt: {{totalCost}}</p>
-        {% if numberOfLocations > 1 %}
-            <button id="makeroute" type="button" class="btn btn-primary">Pokaż trasę</button>
-        {% endif %}
         </br>
         <form action="{% url 'save-trip-plan' shoppingcart.pk %}" method="post">
             {% csrf_token %}
