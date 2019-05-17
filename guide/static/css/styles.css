@@ -44,3 +44,13 @@ i {
     background-repeat: no-repeat;
     background-size: cover;
 }
+.disabled{
+    cursor: default;
+    opacity: 0.5;
+}
+.addBtn{
+    color:#4F4F4F;
+}
+.addBtn i{
+    font-size: 35px;
+}

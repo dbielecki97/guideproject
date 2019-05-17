@@ -18,10 +18,10 @@
 <section class="container-fluid">
     <div class="row">
         <div class="col-5">
-            {% if availableAttractions %}
+            {% if attraction_list %}
                 {% load static %}
                 <div class="listing-block">
-                    {% for attraction in availableAttractions %}
+                    {% for attraction in attraction_list %}
                     <div class="atr-list">
                         <a href="{% url 'attraction-detail' attraction.pk %}" class="media-object" style="color:#000000;">
                             <div class="media">
@@ -34,9 +34,17 @@
                                         </div>
                                     </div>
                                     <div class="plus-icon-place" style="float:left">
-                                        <a href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}" class="add_attraction_btn" style="color:#4F4F4F;">
-                                            <i class="fas fa-plus-square plus-icon" style="font-size:35px;"></i>
-                                        </a>
+                                        {% if user.is_authenticated %}
+                                        {% if  attraction.name not in attractionNamesInCreator%}
+                                            <a href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}" class="addBtn">
+                                                    <i class="fas fa-plus-square plus-icon"></i>
+                                                </a>
+                                        {% else %}
+                                            <a href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}" class="addBtn disabled">
+                                                    <i class="fas fa-plus-square plus-icon"></i>
+                                                </a>
+                                        {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>  
@@ -70,6 +78,9 @@
             $(function(){
             $('.listing-block').slimScroll({
                 height: '600px'
+            });
+            $('.disabled').click((e)=>{
+                e.preventDefault();
             });
         });
     </script>    
