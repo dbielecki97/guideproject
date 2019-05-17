@@ -20,7 +20,7 @@
         <div class="modal-body">
 {% for attraction in availableattractions %}
             <a href="{%url 'attraction-detail' attraction.pk%}">{{attraction.name}}</a>
-            <a href="{% url 'add-attraction' attraction.pk %}" class="btn btn-primary">
+            <a href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}" class="btn btn-primary">
                     <i class="fas fa-shopping-basket basket"></i>
             </a>   
             </br>         
