@@ -5,7 +5,12 @@ from django.contrib.auth.models import User
 
 
 class SaveTripPlanForm(forms.Form):
-    name = forms.CharField(label='Nazwa planu', max_length=150)
+    name = forms.CharField(label='', max_length=150)
+
+    def __init__(self, *args, **kwargs):
+        super(SaveTripPlanForm,
+              self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder'] = 'nazwa planu'
 
 
 class ChangeTripPlanNameForm(forms.Form):
@@ -25,24 +30,25 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = Client
-        fields = ("username", 'email', "password1", "password2")    
+        fields = ("username", 'email', "password1", "password2")
+
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
-            super(PasswordChangeForm, self).__init__(*args, **kwargs)
-            for key in self.fields:
-                self.fields[key].widget.attrs = {'style' : 'width: 40%'}
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        for key in self.fields:
+            self.fields[key].widget.attrs = {'style': 'width: 40%'}
 
 
 class CustomUserChangeForm(UserChangeForm):
     password = None
+
     def __init__(self, *args, **kwargs):
-            super(CustomUserChangeForm, self).__init__(*args, **kwargs)
-            self.fields['email'].required = True
-            for key in self.fields:
-                self.fields[key].widget.attrs = {'style' : 'width: 40%'}
-            
+        super(CustomUserChangeForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = True
+        for key in self.fields:
+            self.fields[key].widget.attrs = {'style': 'width: 40%'}
+
     class Meta:
         model = Client
-        fields =('email', 'name', 'surname')
-    
+        fields = ('email', 'name', 'surname')

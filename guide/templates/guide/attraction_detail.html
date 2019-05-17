@@ -2,10 +2,15 @@
 {% block title %}
     {{attraction.name}} details
 {% endblock title %}
-{% block content %}
+{% block styles %}
 <style>
 .listing-block{background:#fff;height:100%;overflow-y:scroll;}
+#map{
+    height:800px;
+}
 </style>
+{% endblock styles %}
+{% block content %}
 {% load static %}
     <h2 style="padding:10px;text-align:center;">{{attraction.name}}</h2>
 <section class="container-fluid">
@@ -66,7 +71,7 @@
 <script>
         $(function(){
         $('.listing-block').slimScroll({
-            height: '600px'
+            height: '800px'
         });
     });
 </script>    
