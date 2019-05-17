@@ -56,7 +56,7 @@ class AttractionListView(ListView):
         attractions = shoppingCart.attractions.all()
         attractionPKs = attractions.values_list('pk')
         availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
-        context['available_attractions'] = availableAttractions
+        context['availableAttractions'] = availableAttractions
         context["attractionLocalizations"] = extractInfo(self.object_list)
         return context
 
@@ -171,7 +171,7 @@ def addAttractionToShoppingCart(request, pk):
     shoppingCartInstance = get_object_or_404(
         ShoppingCart, owner=clientInstance)
     shoppingCartInstance.attractions.add(attractionInstance)
-    return HttpResponseRedirect(reverse('shopping-cart'))
+    return HttpResponseRedirect(reverse('attractions'))
 
 
 def addAttractionToTripPlan(request, trip_pk, attraction_pk):

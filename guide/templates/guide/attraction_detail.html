@@ -3,40 +3,71 @@
     {{attraction.name}} details
 {% endblock title %}
 {% block content %}
-    <h2><center>{{attraction.name}}</center></h2>
-    <div id="map"></div>
-<div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h4>Opis</h4>
-        </div>        
-        <p>{{attraction.description}}</p>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h4>Lokalizacja</h4>
+<style>
+.listing-block{background:#fff;height:100%;overflow-y:scroll;}
+</style>
+{% load static %}
+    <h2 style="padding:10px;text-align:center;">{{attraction.name}}</h2>
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-5">
+            <div class="listing-block">
+                <div class="list-group">
+                    <div class="list-group-item" style="text-align:center;background-color:#f1f1f1">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5>Zdjęcie</h5>
+                        </div>
+                        <img class="p-2 " style="max-width:500px;max-height:400px;"src="{% static "images/" %}{{attraction.name}}.jpeg" alt="Generic placeholder image">
+                    </div>
+                    <div class="list-group-item" style="background-color:#f0f0f0">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5>Opis</h5>
+                        </div>        
+                        <p>{{attraction.description}}</p>
+                    </div>
+                    <div class="list-group-item" style="background-color:#f0f0f0">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5>Lokalizacja</h5>
+                        </div>
+                        <p>{{attraction.localization}}</p>
+                    </div>
+                    <div class="list-group-item" style="background-color:#f0f0f0">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5>Czas potrzebny na zwiedzanie</h5>
+                        </div>        
+                        <p>{{timeasformattedstring}}</p>
+                    </div>
+                    <div class="list-group-item" style="background-color:#f0f0f0">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5>Cena biletu</h5>
+                        </div>        
+                        <p>{{ticketCost}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p>{{attraction.localization}}</p>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h4>Czas potrzebny na zwiedzanie</h4>
-        </div>        
-        <p>{{timeasformattedstring}}</p>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h4>Cena biletu</h4>
-        </div>        
-        <p>{{ticketCost}}</p>
-    </a>
-</div>
-    <script type="text/javascript">
-        loc={{attractionLocalization|safe}}
-    </script>
+        <div class="col">
+            <div id="map"></div>
+        </div>
+    </div>
+
+</section>
+
+<script type="text/javascript">
+    loc={{attractionLocalization|safe}}
+</script>
 {% endblock content %}
+
 {% block scripts %}
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=attractionDetail">
-  </script>
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+<script>
+        $(function(){
+        $('.listing-block').slimScroll({
+            height: '600px'
+        });
+    });
+</script>    
 {% endblock scripts %}
