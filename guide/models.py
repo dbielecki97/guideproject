@@ -10,7 +10,7 @@ class Client(User):
         _("Surname"), max_length=50, null=True, blank=True, default="")
 
     def __str__(self):
-        return ''+self.name+' '+self.surname
+        return ''+self.username+': '+self.name+' '+self.surname
 
     class Meta:
         verbose_name = "client"
@@ -42,6 +42,12 @@ class Attraction(models.Model):
     def __str__(self):
         return self.name
 
+    def display_catogory(self):
+        """Create a string for the Category. This is required to display category in Admin."""
+        return ', '.join(category.name for category in self.categories.all())
+
+    display_catogory.short_description = 'Category'
+
     class Meta:
         ordering = ['name']
 
@@ -62,6 +68,15 @@ class ShoppingCart(models.Model):
         "właściciel"), on_delete=models.CASCADE)
     attractions = models.ManyToManyField(
         "Attraction", verbose_name=_("Attraction list"), blank=True)
+
+    def owner_username(self):
+        return self.owner.username
+
+    def owner_name(self):
+        return self.owner.name
+
+    def owner_surname(self):
+        return self.owner.surname
 
 
 class TripPlan(models.Model):

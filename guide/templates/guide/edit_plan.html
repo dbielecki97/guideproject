@@ -6,6 +6,8 @@
 
 {% block content %}
     {{trip_plan.name}}
+  <a href="{% url 'trip-plan-detail' trip_plan.pk %}">Podgląd</a>
+    </br>
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#changeName">Zmień nazwę
     </button>
      <a href="{% url 'remove-my-plan' trip_plan.pk %}">
@@ -39,7 +41,38 @@
     </div>
   </div>
 
-
+{% if  trip_plan.attractions.all%}
+  {% if  availableAttractions%}
+<!-- Modal -->
+</br>
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addAttraction">Dodaj atrakcję
+    </button>
+  <div class="modal fade" id="addAttraction" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Wybierz atrakcję do dodania</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+{% for attraction in availableAttractions %}
+            <a href="{%url 'attraction-detail' attraction.pk%}">{{attraction.name}}</a>
+            <a href="{% url 'add-attraction-to-trip-plan' trip_plan.pk attraction.pk %}" class="btn btn-primary">
+                    <i class="fas fa-shopping-basket basket"></i>
+            </a>   
+            </br>         
+        {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  {% endif %}
     {% for attraction in trip_plan.attractions.all %}
             <li>
                 <a href="{% url 'attraction-detail' attraction.pk %}">{{attraction.name}}</a>
@@ -48,5 +81,6 @@
                 </a>
             </li>
         {% endfor %}
+{% endif %}
 
 {% endblock content %}

@@ -160,13 +160,22 @@ class ShoppingCartView(TemplateView):
         return context
 
 
-def addAttraction(request, pk):
+def addAttractionToShoppingCart(request, pk):
     attractionInstance = get_object_or_404(Attraction, pk=pk)
     clientInstance = get_object_or_404(Client, pk=request.user.pk)
     shoppingCartInstance = get_object_or_404(
         ShoppingCart, owner=clientInstance)
     shoppingCartInstance.attractions.add(attractionInstance)
     return HttpResponseRedirect(reverse('shopping-cart'))
+
+
+def addAttractionToTripPlan(request, trip_pk, attraction_pk):
+    attractionInstance = get_object_or_404(Attraction, pk=attraction_pk)
+    clientInstance = get_object_or_404(Client, pk=request.user.pk)
+    tripPlanInstance = get_object_or_404(
+        TripPlan, pk=trip_pk)
+    tripPlanInstance.attractions.add(attractionInstance)
+    return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': trip_pk}))
 
 
 def removeAttractionFromShoppingCart(request, pk):
@@ -224,6 +233,9 @@ class EditPlanView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['trip_plan'] = TripPlan.objects.get(pk=kwargs['pk'])
+        attractionPKs = context['trip_plan'].attractions.values_list('pk')
+        availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
+        context['availableAttractions'] = availableAttractions
         context['changeNameForm'] = ChangeTripPlanNameForm
         return context
 
