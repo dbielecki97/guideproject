@@ -27,7 +27,7 @@ function attractionList() {
     }
 }
 function attractionDetail() {
-    if (loc[0]) {
+    if (loc.length != 0) {
         initMap(15, new google.maps.LatLng(loc[0]['lat-lng']));
         setMarker(map, loc[0]);
         directionsDisplay.setMap(map)

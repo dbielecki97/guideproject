@@ -66,10 +66,10 @@
 {% endblock content %}
 
 {% block scripts%}
-<script>
-    locs={{attractionLocalizations|safe}};
-</script>
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=tripPlanDetail">
   </script>
+<script>
+    locs={{attractionLocalizations|safe}};
+</script>
 {% endblock scripts%}

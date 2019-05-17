@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 import math
 from . import google_maps_api
 import imghdr
@@ -19,6 +20,8 @@ from django.contrib.auth import authenticate, login
 
 from django.contrib.auth.forms import UserChangeForm
 import sys
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def home(request):
@@ -52,11 +55,12 @@ class AttractionListView(ListView):
             attractionNamesInCreator = ShoppingCart.objects.get(
                 owner=user).attractions.values_list('name', flat=True).all()
             context["attractionNamesInCreator"] = attractionNamesInCreator
-        shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
-        attractions = shoppingCart.attractions.all()
-        attractionPKs = attractions.values_list('pk')
-        availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
-        context['available_attractions'] = availableAttractions
+            shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
+            attractions = shoppingCart.attractions.all()
+            attractionPKs = attractions.values_list('pk')
+            availableAttractions = Attraction.objects.exclude(
+                pk__in=attractionPKs)
+            context['available_attractions'] = availableAttractions
         context["attractionLocalizations"] = extractInfo(self.object_list)
         return context
 
@@ -129,7 +133,7 @@ class TripPlanDetailView(DetailView):
         return context
 
 
-class MyTripPlanListView(ListView):
+class MyTripPlanListView(LoginRequiredMixin, ListView):
     model = TripPlan
     template_name = "guide/mytripplan_list.html"
     context_object_name = "mytripplans"
@@ -138,7 +142,7 @@ class MyTripPlanListView(ListView):
         return TripPlan.objects.filter(creator=self.request.user)
 
 
-class ShoppingCartView(TemplateView):
+class ShoppingCartView(LoginRequiredMixin, TemplateView):
     template_name = 'guide/shoppingcart.html'
 
     def get_context_data(self, **kwargs):
@@ -165,6 +169,7 @@ class ShoppingCartView(TemplateView):
         return context
 
 
+@login_required
 def addAttractionToShoppingCart(request, pk):
     attractionInstance = get_object_or_404(Attraction, pk=pk)
     clientInstance = get_object_or_404(Client, pk=request.user.pk)
@@ -174,6 +179,7 @@ def addAttractionToShoppingCart(request, pk):
     return HttpResponseRedirect(reverse('shopping-cart'))
 
 
+@login_required
 def addAttractionToTripPlan(request, trip_pk, attraction_pk):
     attractionInstance = get_object_or_404(Attraction, pk=attraction_pk)
     clientInstance = get_object_or_404(Client, pk=request.user.pk)
@@ -183,6 +189,7 @@ def addAttractionToTripPlan(request, trip_pk, attraction_pk):
     return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': trip_pk}))
 
 
+@login_required
 def removeAttractionFromShoppingCart(request, pk):
     attractionInstance = get_object_or_404(Attraction, pk=pk)
     clientInstance = get_object_or_404(Client, pk=request.user.pk)
@@ -199,6 +206,7 @@ def removeAttractionFromPlan(request, trip_pk, attr_pk):
     return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': trip_pk}))
 
 
+@login_required
 def saveTripPlan(request, pk):
     if request.method == 'POST':
         form = SaveTripPlanForm(request.POST)
@@ -227,12 +235,13 @@ class SignUp(FormView):
         return redirect(self.success_url)
 
 
+@login_required
 def removeMyPlan(request, pk):
     tripPlan = get_object_or_404(TripPlan, pk=pk).delete()
     return HttpResponseRedirect(reverse('my-trip-plans'))
 
 
-class EditPlanView(TemplateView):
+class EditPlanView(LoginRequiredMixin, TemplateView):
     template_name = "guide/edit_plan.html"
 
     def get_context_data(self, **kwargs):
@@ -245,6 +254,7 @@ class EditPlanView(TemplateView):
         return context
 
 
+@login_required
 def changeNameOfPlan(request, pk):
     if request.method == 'POST':
         form = ChangeTripPlanNameForm(request.POST)
@@ -256,6 +266,7 @@ def changeNameOfPlan(request, pk):
     return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': pk}))
 
 
+@login_required
 def change_password(request):
     if request.method == 'POST':
         form = CustomPasswordChangeForm(request.user, request.POST)
@@ -274,6 +285,7 @@ def change_password(request):
     })
 
 
+@login_required
 def generalSettings(request):
     client = get_object_or_404(Client, pk=request.user.pk)
     if request.method == 'POST':
