@@ -55,12 +55,20 @@ class AttractionListView(ListView):
             attractionNamesInCreator = ShoppingCart.objects.get(
                 owner=user).attractions.values_list('name', flat=True).all()
             context["attractionNamesInCreator"] = attractionNamesInCreator
+<<<<<<< HEAD
             shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
             attractions = shoppingCart.attractions.all()
             attractionPKs = attractions.values_list('pk')
             availableAttractions = Attraction.objects.exclude(
                 pk__in=attractionPKs)
             context['available_attractions'] = availableAttractions
+=======
+        shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
+        attractions = shoppingCart.attractions.all()
+        attractionPKs = attractions.values_list('pk')
+        availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
+        context['availableAttractions'] = availableAttractions
+>>>>>>> f5341d2fc37a21e4b3616df749eb9ead79d3731f
         context["attractionLocalizations"] = extractInfo(self.object_list)
         return context
 
@@ -176,7 +184,7 @@ def addAttractionToShoppingCart(request, pk):
     shoppingCartInstance = get_object_or_404(
         ShoppingCart, owner=clientInstance)
     shoppingCartInstance.attractions.add(attractionInstance)
-    return HttpResponseRedirect(reverse('shopping-cart'))
+    return HttpResponseRedirect(reverse('attractions'))
 
 
 @login_required

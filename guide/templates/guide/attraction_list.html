@@ -8,35 +8,32 @@
 
 @import url('https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700'); 
 .listing-block{background:#fff;height:100%;overflow-y:scroll;}
-.atr-list{margin-bottom:10px;padding:10px;border-color:#C0C0C0;background-color: #FAF9F8 ;width:100%;}
+.atr-list{margin-bottom:10px;padding:10px;border-color:#C0C0C0;background-color: #f1f1f1 ;width:100%;}
 .atr-list:hover{background-color: #E8E8E8;}
 .plus-icon:hover{color:#101010;}
+
 </style>
 
-<section class="head">
-    <div class="container">
-        <h3 class="text-center"><span>Lista dostepnych atrakcji</span></h2>
-    </div>
-</section>
+<h2 style="padding:10px;text-align:center;"><span>Lista dostepnych atrakcji</span></h2>
 <section class="container-fluid">
     <div class="row">
         <div class="col-5">
-            {% if attraction_list %}
+            {% if availableAttractions %}
                 {% load static %}
                 <div class="listing-block">
-                    {% for attraction in attraction_list %}
+                    {% for attraction in availableAttractions %}
                     <div class="atr-list">
                         <a href="{% url 'attraction-detail' attraction.pk %}" class="media-object" style="color:#000000;">
                             <div class="media">
                                 <img class="mr-3" style="width: 128px; height: 80px"src="{% static "images/" %}{{attraction.name}}.jpeg" alt="Generic placeholder image">
                                 <div class="media-body">
-                                    <div class="con" style="float:left; width:85%"><h5 class="mt-3 text-left">{{attraction.name}}</h5>
+                                    <div class="con" style="float:left; width:85%"><h5 class="mt-1 text-left">{{attraction.name}}</h5>
                                         <div class="stats text-left">
                                             <span><i class="fa fa-clock-o"></i> {{attraction.timeNeededToSightsee}} h</span>
                                             <span><i class="fa fa-money"></i> {{attraction.ticketCost}} zł</span>
                                         </div>
                                     </div>
-                                    <div class="plus-icon-place" style="float:left; margin-top:1.25rem">
+                                    <div class="plus-icon-place" style="float:left">
                                         <a href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}" class="add_attraction_btn" style="color:#4F4F4F;">
                                             <i class="fas fa-plus-square plus-icon" style="font-size:35px;"></i>
                                         </a>
@@ -48,7 +45,10 @@
                     {% endfor %}
                     
                 </div>
+            {% else %}
+                <h5 style="margin-top:50%;"><center>Wybrałeś wszystkie atrakcje</center></h5>
             {% endif %}
+
         </div>
         <div class="col">
             <div id="map"></div>
@@ -72,13 +72,5 @@
                 height: '600px'
             });
         });
-    </script>
-    <script>
-        $(document).on("click", ".add_attraction_btn",(function (event){ 
-            alert("dodano, ??")
-            
-        }));
-        
-    </script>
-    
+    </script>    
 {% endblock scripts%}
