@@ -52,6 +52,11 @@ class AttractionListView(ListView):
             attractionNamesInCreator = ShoppingCart.objects.get(
                 owner=user).attractions.values_list('name', flat=True).all()
             context["attractionNamesInCreator"] = attractionNamesInCreator
+        shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
+        attractions = shoppingCart.attractions.all()
+        attractionPKs = attractions.values_list('pk')
+        availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
+        context['available_attractions'] = availableAttractions
         context["attractionLocalizations"] = extractInfo(self.object_list)
         return context
 
