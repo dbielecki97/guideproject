@@ -109,10 +109,12 @@ function calcRoute() {
             hoursTag = document.getElementById('totalTime_hours');
             minutesTag = document.getElementById('totalTime_minutes');
             totalDistance = document.getElementById('totalDistance');
+            mapTitle = document.getElementById('mapTitle');
+            console.log(mapTitle);
+            mapTitle.innerHTML = "Trasa";
             totalDistance.innerHTML = "Całkowita droga do przejścia: " + round(totalWalkingDistance / 1000, 2) + " km";
             totalTime = hours + minutes / 60;
             totalTime += totalWalkingTime / 3600;
-            console.log(totalTime)
             h = totalTime - totalTime % 1;
             m = round((totalTime - h) * 60)
             hoursTag.innerHTML = h;

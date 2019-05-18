@@ -23,7 +23,6 @@ urlpatterns = [
     path("mytripplans", views.MyTripPlanListView.as_view(), name="my-trip-plans"),
     path('signup', views.SignUp.as_view(), name='signup'),
     path('removemyplan/<int:pk>', views.removeMyPlan, name='remove-my-plan'),
-    path('editmyplan/<int:pk>', views.EditPlanView.as_view(), name='edit-my-plan'),
     path('changename/<int:pk>',
          views.changeNameOfPlan, name='change-name'),
     path('myaccount/general', views.generalSettings, name='general'),

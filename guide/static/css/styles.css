@@ -35,4 +35,7 @@
 .icon-wrapper i{
     font-size: 35px;
 }
+.size-50{
+    font-size:50px;
+}
 .icon-wrapper:not(.disabled):hover{opacity: 0.7;}

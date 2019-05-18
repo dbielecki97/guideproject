@@ -129,6 +129,11 @@ class TripPlanDetailView(DetailView):
         hours, minutes = getTotalTime(self.object.attractions.all())
         context['hours'] = hours
         context['minutes'] = minutes
+        try:
+            if self.request.user.pk == self.object.creator.pk:
+                context['changeNameForm'] = ChangeTripPlanNameForm
+        except:
+            pass
         context['totalPrice'] = getTotalPrice(self.object.attractions.all())
         return context
 
@@ -199,11 +204,12 @@ def removeAttractionFromShoppingCart(request, pk):
     return HttpResponseRedirect(reverse('shopping-cart'))
 
 
+@login_required
 def removeAttractionFromPlan(request, trip_pk, attr_pk):
     attractionInstance = get_object_or_404(Attraction, pk=attr_pk)
     tripplan = get_object_or_404(TripPlan, pk=trip_pk)
     tripplan.attractions.remove(attractionInstance)
-    return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': trip_pk}))
+    return HttpResponseRedirect(reverse('trip-plan-detail', kwargs={'pk': trip_pk}))
 
 
 @login_required
@@ -241,19 +247,6 @@ def removeMyPlan(request, pk):
     return HttpResponseRedirect(reverse('my-trip-plans'))
 
 
-class EditPlanView(LoginRequiredMixin, TemplateView):
-    template_name = "guide/edit_plan.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['trip_plan'] = TripPlan.objects.get(pk=kwargs['pk'])
-        attractionPKs = context['trip_plan'].attractions.values_list('pk')
-        availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
-        context['availableAttractions'] = availableAttractions
-        context['changeNameForm'] = ChangeTripPlanNameForm
-        return context
-
-
 @login_required
 def changeNameOfPlan(request, pk):
     if request.method == 'POST':
@@ -263,7 +256,7 @@ def changeNameOfPlan(request, pk):
             tripplan.name = form.cleaned_data['name']
             tripplan.save()
 
-    return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': pk}))
+    return HttpResponseRedirect(reverse('trip-plan-detail', kwargs={'pk': pk}))
 
 
 @login_required

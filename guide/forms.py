@@ -5,16 +5,19 @@ from django.contrib.auth.models import User
 
 
 class SaveTripPlanForm(forms.Form):
-    name = forms.CharField(label='', max_length=150)
-
-    def __init__(self, *args, **kwargs):
-        super(SaveTripPlanForm,
-              self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs['placeholder'] = 'nazwa planu'
+    name = forms.CharField(label='', widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'podaj nazwę planu',
+        }))
 
 
 class ChangeTripPlanNameForm(forms.Form):
-    name = forms.CharField(label='Nowa nazwa planu', max_length=150)
+    name = forms.CharField(label='', widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'nowa nazwa',
+        }))
 
 
 class SignUpForm(UserCreationForm):
@@ -22,11 +25,11 @@ class SignUpForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['password1'].help_text = None
         self.fields['username'].help_text = None
-        self.fields['username'].widget.attrs = {'style': 'width: 100%'}
-        self.fields['email'].widget.attrs = {'style': 'width: 100%'}
+        self.fields['username'].widget.attrs = {'class': 'form-control'}
+        self.fields['email'].widget.attrs = {'class': 'form-control'}
         self.fields['email'].required = True
-        self.fields['password1'].widget.attrs = {'style': 'width: 100%'}
-        self.fields['password2'].widget.attrs = {'style': 'width: 100%'}
+        self.fields['password1'].widget.attrs = {'class': 'form-control'}
+        self.fields['password2'].widget.attrs = {'class': 'form-control'}
 
     class Meta:
         model = Client
@@ -37,7 +40,7 @@ class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super(PasswordChangeForm, self).__init__(*args, **kwargs)
         for key in self.fields:
-            self.fields[key].widget.attrs = {'style': 'width: 40%'}
+            self.fields[key].widget.attrs = {'class': 'form-control'}
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -47,7 +50,7 @@ class CustomUserChangeForm(UserChangeForm):
         super(CustomUserChangeForm, self).__init__(*args, **kwargs)
         self.fields['email'].required = True
         for key in self.fields:
-            self.fields[key].widget.attrs = {'style': 'width: 40%'}
+            self.fields[key].widget.attrs = {'class': 'form-control'}
 
     class Meta:
         model = Client
