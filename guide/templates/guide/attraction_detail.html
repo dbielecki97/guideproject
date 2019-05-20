@@ -4,55 +4,72 @@
 {% endblock title %}
 {% block styles %}
 <style>
-.listing-block{background:#fff;height:100%;overflow-y:scroll;}
 #map{
-    height:800px;
+    height:600px;
+    width:800px;
+    margin: 0 auto 30px auto;
+}
+.border-3{
+    border-width:3px !important;
 }
 </style>
 {% endblock styles %}
 {% block content %}
 {% load static %}
-    <h2 style="padding:10px;text-align:center;">{{attraction.name}}</h2>
 <section class="container-fluid">
-    <div class="row">
-        <div class="col-5">
+    <div class="row mt-4 mr-4">
+        <div class="col-4 text-right">
+        </div>
+        <div class="col-4 text-center border-bottom border-primary border-3">
+        <h4>{{attraction.name}}</h4>
+        </div>
+        <div class="col-4 text-right">
+        {% if not inPlan and user.is_authenticated %}
+            <a href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}" class="icon-wrapper">
+                    <i class="far fa-plus-square"></i>
+            </a>
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
             <div class="listing-block">
-                <div class="list-group">
-                    <div class="list-group-item" style="text-align:center;background-color:#f1f1f1">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5>Zdjęcie</h5>
-                        </div>
-                        <img class="p-2 " style="max-width:500px;max-height:400px;"src="{% static "images/" %}{{attraction.name}}.jpeg" alt="Generic placeholder image">
-                    </div>
-                    <div class="list-group-item" style="background-color:#f0f0f0">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5>Opis</h5>
-                        </div>        
-                        <p>{{attraction.description}}</p>
-                    </div>
-                    <div class="list-group-item" style="background-color:#f0f0f0">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5>Lokalizacja</h5>
-                        </div>
-                        <p>{{attraction.localization}}</p>
-                    </div>
-                    <div class="list-group-item" style="background-color:#f0f0f0">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5>Czas potrzebny na zwiedzanie</h5>
-                        </div>        
-                        <p>{{timeasformattedstring}}</p>
-                    </div>
-                    <div class="list-group-item" style="background-color:#f0f0f0">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5>Cena biletu</h5>
-                        </div>        
-                        <p>{{ticketCost}}</p>
-                    </div>
+               <div class="card w-75  mx-auto">
+                <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
+                <div class="card-header py-5">
+                    <h3>{{attraction.name}}</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                    <h4 class="pb-3">Opis</h4>
+                        {{attraction.description}}
+                    </li>
+                    <li class="list-group-item">
+                    <h4 class="pb-3">Lokalizacja</h4>
+                        {{attraction.localization}}
+                    </li>
+                    <li class="list-group-item">
+                    <h4 class="pb-3">Koszt</h4>
+                        {{attraction.getFormattedCost}}
+                    </li>
+                    <li class="list-group-item">
+                    <h4 class="pb-3">Potrzebny czas</h4>
+                        {{attraction.getTimeAsFormattedString}}
+                    </li>
+                </ul>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div id="map"></div>
+            <div class="row">
+                    <div class="col">
+                        <h3 class="text-center">Lokalizacja na mapie</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="" id="map"></div>
+                </div>
         </div>
     </div>
 

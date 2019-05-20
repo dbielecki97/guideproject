@@ -1,3 +1,4 @@
+import math
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -46,6 +47,22 @@ class Attraction(models.Model):
         """Create a string for the Category. This is required to display category in Admin."""
         return ', '.join(category.name for category in self.categories.all())
 
+    def getTimeAsFormattedString(self):
+        hours = int(self.timeNeededToSightsee)
+        minutes = int((self.timeNeededToSightsee % 1)*60)
+        result = ''
+        if hours:
+            result += str(hours) + ' godzin(-a/y) '
+        if minutes:
+            result += str(minutes) + ' minut(-a)'
+        return result
+
+    def getFormattedCost(self):
+        if self.ticketCost == 0:
+            return 'Darmowe'
+        else:
+            return f'{str(self.ticketCost)} zł'
+
     display_catogory.short_description = 'Category'
 
     class Meta:
@@ -78,6 +95,39 @@ class ShoppingCart(models.Model):
     def owner_surname(self):
         return self.owner.surname
 
+    def getNumberOfAttractions(self):
+        return len(attractions)
+
+    def getTotalCost(self):
+        tCost = 0
+        for attraction in self.attractions.all():
+            tCost += attraction.ticketCost
+        return tCost
+
+    def getTotalTime(self):
+        tTime = 0
+        for attraction in self.attractions.all():
+            tTime += attraction.timeNeededToSightsee
+        return tTime
+
+    def getTimeAsFormattedString(self):
+        time = self.getTotalTime()
+        hours = int(time)
+        minutes = int((time % 1)*60)
+        result = ''
+        if hours:
+            result += str(hours) + ' godzin(-a/y) '
+        if minutes:
+            result += str(minutes) + ' minut(-a)'
+        return result
+
+    def getFormattedCost(self):
+        totalTime = self.getTotalCost()
+        if totalTime == 0:
+            return 'Darmowe'
+        else:
+            return f'{totalTime} zł'
+
 
 class TripPlan(models.Model):
     name = models.CharField(_("Name"), max_length=150)
@@ -88,6 +138,28 @@ class TripPlan(models.Model):
 
     def __str__(self):
         return '' + self.name
+
+    def getNumberOfAttractions(self):
+        return len(self.attractions.all())
+
+    def getTotalTimeSplit(self):
+        totalTime = 0
+        for attraction in self.attractions.all():
+            totalTime += attraction.timeNeededToSightsee
+        return math.floor(totalTime), round((totalTime-math.floor(totalTime))*60)
+
+    def getTotalCost(self):
+        totalPrice = 0
+        for attraction in self.attractions.all():
+            totalPrice += attraction.ticketCost
+        return totalPrice
+
+    def getFormattedCost(self):
+        totalTime = self.getTotalCost()
+        if totalTime == 0:
+            return 'Darmowe'
+        else:
+            return f'{totalTime} zł'
 
     class Meta:
         ordering = ['name']

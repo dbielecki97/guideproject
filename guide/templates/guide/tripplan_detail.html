@@ -9,14 +9,8 @@
     width:800px;
     margin: 0 auto 30px auto;
 }
-.card {
-    margin:0 auto 30px auto;
-}
 .border-3 {
     border-width:3px !important;
-}
-.test{
-    background-image:
 }
 .card .add-card{
     display:block;
@@ -98,11 +92,11 @@
         <h3>{{tripplan.name}}</h3>
         </div>
         <div class="col-4 text-right">
-            {% if tripplan.creator.pk == user.pk %}
+            {% if tripplan.creator.pk == user.pk and tripplan.creator.pk %}
                 <a href="#" data-toggle="modal" data-target="#changeName" class="icon-wrapper"><i class="fas fa-edit"></i></a>
                 <a href="{% url 'remove-my-plan' tripplan.pk%}" class=icon-wrapper><i class="fas fa-trash-alt"></i></a>
             {% endif %}
-                    {% if numberOfLocations > 1 %}
+                    {% if tripplan.getNumberOfAttractions > 1 %}
                  <a href="#" class="icon-wrapper" data-toggle="modal" data-target="#route">
                  <i class="fas fa-route route"></i>
                  </a>
@@ -112,15 +106,15 @@
     <div class="row mt-4">
         <div class="col-5 text-center">
             <h3>Atrakcje wchodzące w plan:</h3>
-                <div class="listing-block"> 
+                <div class="listing-block "> 
                     {% for attraction in tripplan.attractions.all %}
-                        <div class="card w-75">
+                        <div class="card w-75 text-left mb-5 mx-auto">
                             <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{attraction.name}}</h5>
+                                    <h5 class="card-title pb-5">{{attraction.name}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">
-                                        <i class="fa fa-clock-o"></i> {{attraction.timeNeededToSightsee}} h
-                                        <i class="fa fa-money"></i> {{attraction.ticketCost}} zł
+                                        <i class="fa fa-clock-o pb-2"></i> {{attraction.getTimeAsFormattedString}}<br>
+                                        <i class="fa fa-money"></i> {{attraction.getFormattedCost}}
                                     </h6>
                                     {% if tripplan.creator.pk == user.pk %}
                                         <p class="card-text text-right">
@@ -135,11 +129,12 @@
                                 </div> 
                         </div>
                     {% endfor %}
-                    {% if tripplan.creator.pk == user.pk %}
+                    <!--{% if tripplan.creator.pk == user.pk %}
                     <div class="card bg-dark text-white w-75">
                             <a href="#" class="card-title icon-wrapper text-white add-card"><i class="fas fa-plus-square"></i></a>
-                            <!--MODAL????-->
+                            
                         </div>
+                        -->
                     {% endif %}
                 </div>
       </div>
@@ -148,7 +143,7 @@
             <div id="map"></div>
             <h3>Całkowity czas zwiedzania: <span id="totalTime_hours">{{hours}}</span> godziny
             <span id="totalTime_minutes">{{minutes}}</span> minut</h3>
-        <h3>Całkowity koszy zwiedzania: {{totalPrice}}<h3>
+        <h3>Całkowity koszy zwiedzania: {{tripplan.getFormattedCost}}<h3>
         <h3 id="totalDistance"><h3>
       </div>
       </div>

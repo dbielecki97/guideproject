@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-import math
 from . import google_maps_api
 import imghdr
 import simplejson
@@ -65,35 +64,18 @@ class AttractionListView(ListView):
         return context
 
 
-def getTimeAsFormattedString(time):
-    hours = int(time)
-    minutes = int((time % 1)*60)
-    result = ''
-    if hours:
-        result += str(hours) + ' godzin(-a/y) '
-    if minutes:
-        result += str(minutes) + ' minut(-a)'
-    return result
-
-
-def getFormattedCost(ammount):
-    formattedAmmound = ''
-    if ammount == 0:
-        formattedAmmound = 'Darmowe'
-    else:
-        formattedAmmound += str(ammount) + ' zł'
-    return formattedAmmound
-
-
 class AttractionDetailView(DetailView):
     model = Attraction
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['timeasformattedstring'] = getTimeAsFormattedString(
-            self.object.timeNeededToSightsee)
         context['attractionLocalization'] = extractInfo(self.object)
-        context['ticketCost'] = getFormattedCost(self.object.ticketCost)
+        try:
+            shoppingcart = ShoppingCart.objects.get(owner=self.request.user)
+            if shoppingcart.attractions.filter(pk=self.object.pk):
+                context['inPlan'] = True
+        except:
+            pass
         return context
 
 
@@ -104,20 +86,6 @@ class TripPlanListView(ListView):
         return TripPlan.objects.filter(creator__isnull=True)
 
 
-def getTotalPrice(attractions):
-    totalPrice = 0
-    for attraction in attractions:
-        totalPrice += attraction.ticketCost
-    return totalPrice
-
-
-def getTotalTime(attractions):
-    totalTime = 0
-    for attraction in attractions:
-        totalTime += attraction.timeNeededToSightsee
-    return math.floor(totalTime), round((totalTime-math.floor(totalTime))*60)
-
-
 class TripPlanDetailView(DetailView):
     model = TripPlan
 
@@ -125,8 +93,7 @@ class TripPlanDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         attractionLocalizations = extractInfo(self.object.attractions.all())
         context["attractionLocalizations"] = attractionLocalizations
-        context["numberOfLocations"] = len(attractionLocalizations)
-        hours, minutes = getTotalTime(self.object.attractions.all())
+        hours, minutes = self.object.getTotalTimeSplit()
         context['hours'] = hours
         context['minutes'] = minutes
         try:
@@ -134,7 +101,6 @@ class TripPlanDetailView(DetailView):
                 context['changeNameForm'] = ChangeTripPlanNameForm
         except:
             pass
-        context['totalPrice'] = getTotalPrice(self.object.attractions.all())
         return context
 
 
@@ -156,21 +122,12 @@ class ShoppingCartView(LoginRequiredMixin, TemplateView):
         attractions = shoppingCart.attractions.all()
         attractionPKs = attractions.values_list('pk')
         availableAttractions = Attraction.objects.exclude(pk__in=attractionPKs)
-        totalTime = 0
-        totalCost = 0
-        for attraction in attractions:
-            totalTime += attraction.timeNeededToSightsee
-        for attraction in attractions:
-            totalCost += attraction.ticketCost
         context['shoppingcart'] = shoppingCart
         context['attractions'] = attractions
-        context['totalTime'] = getTimeAsFormattedString(totalTime)
-        context['totalCost'] = getFormattedCost(totalCost)
         context['saveform'] = SaveTripPlanForm
         context['availableattractions'] = availableAttractions
         attractionLocalizations = extractInfo(attractions)
         context["attractionLocalizations"] = attractionLocalizations
-        context['numberOfLocations'] = len(attractionLocalizations)
         return context
 
 

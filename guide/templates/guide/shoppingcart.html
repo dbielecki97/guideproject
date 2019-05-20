@@ -9,9 +9,6 @@
     width:800px;
     margin: 0 auto 30px auto;
 }
-.card {
-    margin:0 auto 30px auto;
-}
 form{
     display:block;
     margin: 10px auto;
@@ -42,13 +39,13 @@ form{
                 <h3 class="text-center">Atrakcje</h3>
                 <div class="listing-block"> 
                     {% for attraction in attractions.all %}
-                        <div class="card w-75">
+                        <div class="card w-75 mb-5 mx-auto">
                             <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
                             <div class="card-body">
-                                <h5 class="card-title">{{attraction.name}}</h5>
+                                <h5 class="card-title pb-5">{{attraction.name}}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">
-                                    <i class="fa fa-clock-o"></i> {{attraction.timeNeededToSightsee}} h
-                                    <i class="fa fa-money"></i> {{attraction.ticketCost}} zł
+                                    <i class="fa fa-clock-o pb-2"></i> {{attraction.getTimeAsFormattedString}} <br>
+                                    <i class="fa fa-money"></i> {{attraction.getFormattedCost}}
                                 </h6>
                                 <p class="card-text text-right">
                                     <a class="icon-wrapper" href="{% url 'attraction-detail' attraction.pk %}">
@@ -75,9 +72,9 @@ form{
                 <div class="row">
                     <div class="col">
                             <h3 class="text-center">Podsumowanie</h3>
-                            <h4 class="text-center">Czas zwiedzania: {{totalTime}}*</h4>
+                            <h4 class="text-center">Czas zwiedzania: {{shoppingcart.getTimeAsFormattedString}}*</h4>
                             <h6 class="text-center">* nie uwzględnia czasu przemieszczania się między atrakcjami</h6>
-                            <h4 class="text-center">Całkowity koszt: {{totalCost}}</h4>
+                            <h4 class="text-center">Całkowity koszt: {{shoppingcart.getFormattedCost}}</h4>
                     </div>
                 </div>
             </div>

@@ -5,21 +5,28 @@
 {% endblock title %}    
 {% block styles %}
 <style>
-.atr-list{margin-bottom:10px;padding:10px;border-color:#C0C0C0;background-color: #f1f1f1 ;width:calc(100% - 15px);}
-.atr-list:hover{background-color: #E8E8E8;}
-.plus-icon:hover{color:#101010;}
-.atr-list a{
-    color:#000;
+.card-columns {
+    column-count:3;
 }
-.atr-list .info{
-    color:#7e7e7e;
+@media screen and (max-width:992px) {
+    .card-columns{
+        column-count:3;
+    }
 }
-#map{
-    height:800px;
+@media screen and (max-width:768px) {
+    .card-columns{
+        column-count:2;
+    }
+}
+@media screen and (max-width:600px) {
+    .card-columns{
+        column-count:1;
+    }
 }
 </style>
 {% endblock styles %}
 {% block content %}
+<!--
 <h2 style="padding:10px;text-align:center;"><span>Lista dostepnych atrakcji</span></h2>
 <section class="container-fluid">
     <div class="row">
@@ -67,13 +74,45 @@
         </div>  
     </div>
 </section>
-
+-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-center my-4">Dostępne atrakcje</h2>
+            <div class="listing-block text-center"> 
+            <div class="card-columns"> 
+                {% for attraction in attraction_list %}
+                    <div class="card w-75 text-left">
+                        <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
+                        <div class="card-body">
+                            <h5 class="card-title pb-5">{{attraction.name}}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <i class="fa fa-clock-o pb-2"></i> {{attraction.getTimeAsFormattedString}} <br>
+                                <i class="fa fa-money"></i> {{attraction.getFormattedCost}}
+                            </h6>
+                            <p class="card-text text-right">
+                                <a class="icon-wrapper" href="{% url 'attraction-detail' attraction.pk %}">
+                                    <i class="far fa-eye"></i>
+                                </a>
+                                {% if attraction.name not in attractionNamesInCreator %}
+                                    <a class="icon-wrapper" href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}">
+                                        <i class="fas fa-plus-square"></i>
+                                    </a>
+                                {% endif %}
+                            </p> 
+                        </div> 
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
 
 {% block scripts%}
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=attractionList">
-    </script>
+    {% comment %} <script async defer {% endcomment %}
+        {% comment %} src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArdvkTXE1oDlhs3VbJ4KJGYZtclFj79Hg&callback=attractionList"> {% endcomment %}
+    {% comment %} </script> {% endcomment %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
     
  
@@ -82,9 +121,6 @@
             $(function(){
             $('.listing-block').slimScroll({
                 height: '800px'
-            });
-            $('.disabled').click((e)=>{
-                e.preventDefault();
             });
         });
     </script>    
