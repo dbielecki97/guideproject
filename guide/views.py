@@ -92,10 +92,9 @@ class TripPlanDetailView(DetailView):
         context['hours'] = hours
         context['minutes'] = minutes
         if self.request.user.is_authenticated and self.request.user.pk == self.object.creator.pk:
-            attractions = ShoppingCart.objects.get(
-                owner=self.request.user).attractions.all()
             availableAttractions = Attraction.objects.exclude(
-                pk__in=attractions.values_list('pk'))
+                pk__in=self.object.attractions.values_list('pk'))
+            print(availableAttractions)
             context['availableAttractions'] = availableAttractions
             context['changeNameForm'] = ChangeTripPlanNameForm
         return context
