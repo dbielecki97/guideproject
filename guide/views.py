@@ -60,7 +60,6 @@ class AttractionListView(ListView):
             availableAttractions = Attraction.objects.exclude(
                 pk__in=attractionPKs)
             context['available_attractions'] = availableAttractions
-        context["attractionLocalizations"] = extractInfo(self.object_list)
         return context
 
 

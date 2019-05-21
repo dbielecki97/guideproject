@@ -12,16 +12,11 @@
 .border-3 {
     border-width:3px !important;
 }
-.card .add-card{
-    display:block;
-    width:100%;
-    height:100%;
-}
 </style>
 {% endblock styles %}
 {% block content %}
 <!-- Modal -->
-                    {% if numberOfLocations > 1 %}
+                    {% if tripplan.getNumberOfAttractions > 1 %}
 
   <div class="modal fade" id="route" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -116,25 +111,24 @@
                                         <i class="fa fa-clock-o pb-2"></i> {{attraction.getTimeAsFormattedString}}<br>
                                         <i class="fa fa-money"></i> {{attraction.getFormattedCost}}
                                     </h6>
-                                    {% if tripplan.creator.pk == user.pk %}
                                         <p class="card-text text-right">
                                             <a class="icon-wrapper" href="{% url 'attraction-detail' attraction.pk %}">
                                                 <i class="far fa-eye"></i>
                                             </a>
+                                          {% if tripplan.creator.pk == user.pk and user.is_authenticated%}
                                             <a class="icon-wrapper" href="{% url 'remove-attraction-from-plan' tripplan.pk attraction.pk %}">
                                                 <i class="fas fa-minus-square"></i>
                                             </a>
-                                        </p> 
                                     {% endif %}
+                                        </p> 
                                 </div> 
                         </div>
                     {% endfor %}
-                    <!--{% if tripplan.creator.pk == user.pk %}
-                    <div class="card bg-dark text-white w-75">
+                    {% if tripplan.creator.pk == user.pk and user.is_authenticated%}
+                    <div class="card bg-dark text-white w-75 mx-auto">
                             <a href="#" class="card-title icon-wrapper text-white add-card"><i class="fas fa-plus-square"></i></a>
                             
                         </div>
-                        -->
                     {% endif %}
                 </div>
       </div>
