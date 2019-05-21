@@ -50,16 +50,12 @@ class AttractionListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            user = Client.objects.get(pk=self.request.user.pk)
-            attractionNamesInCreator = ShoppingCart.objects.get(
-                owner=user).attractions.values_list('name', flat=True).all()
-            context["attractionNamesInCreator"] = attractionNamesInCreator
-            shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
-            attractions = shoppingCart.attractions.all()
+            attractions = ShoppingCart.objects.get(
+                owner=self.request.user).attractions.all()
             attractionPKs = attractions.values_list('pk')
             availableAttractions = Attraction.objects.exclude(
                 pk__in=attractionPKs)
-            context['available_attractions'] = availableAttractions
+            context['availableAttractions'] = availableAttractions
         return context
 
 
@@ -95,22 +91,13 @@ class TripPlanDetailView(DetailView):
         hours, minutes = self.object.getTotalTimeSplit()
         context['hours'] = hours
         context['minutes'] = minutes
-        if self.request.user.is_authenticated:
-            user = Client.objects.get(pk=self.request.user.pk)
-            attractionNamesInCreator = ShoppingCart.objects.get(
-                owner=user).attractions.values_list('name', flat=True).all()
-            context["attractionNamesInCreator"] = attractionNamesInCreator
-            shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
-            attractions = shoppingCart.attractions.all()
-            attractionPKs = attractions.values_list('pk')
+        if self.request.user.is_authenticated and self.request.user.pk == self.object.creator.pk:
+            attractions = ShoppingCart.objects.get(
+                owner=self.request.user).attractions.all()
             availableAttractions = Attraction.objects.exclude(
-                pk__in=attractionPKs)
-            context['available_attractions'] = availableAttractions
-        try:
-            if self.request.user.pk == self.object.creator.pk:
-                context['changeNameForm'] = ChangeTripPlanNameForm
-        except:
-            pass
+                pk__in=attractions.values_list('pk'))
+            context['availableAttractions'] = availableAttractions
+            context['changeNameForm'] = ChangeTripPlanNameForm
         return context
 
 

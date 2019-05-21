@@ -46,7 +46,7 @@
                                 <a class="icon-wrapper" href="{% url 'attraction-detail' attraction.pk %}">
                                     <i class="far fa-eye"></i>
                                 </a>
-                                {% if attraction.name not in attractionNamesInCreator %}
+                                {% if attraction in availableAttractions %}
                                     <a class="icon-wrapper" href="{% url 'add-attraction-to-shopping-cart' attraction.pk %}">
                                         <i class="fas fa-plus-square"></i>
                                     </a>
