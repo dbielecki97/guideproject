@@ -95,6 +95,17 @@ class TripPlanDetailView(DetailView):
         hours, minutes = self.object.getTotalTimeSplit()
         context['hours'] = hours
         context['minutes'] = minutes
+        if self.request.user.is_authenticated:
+            user = Client.objects.get(pk=self.request.user.pk)
+            attractionNamesInCreator = ShoppingCart.objects.get(
+                owner=user).attractions.values_list('name', flat=True).all()
+            context["attractionNamesInCreator"] = attractionNamesInCreator
+            shoppingCart = ShoppingCart.objects.get(owner=self.request.user)
+            attractions = shoppingCart.attractions.all()
+            attractionPKs = attractions.values_list('pk')
+            availableAttractions = Attraction.objects.exclude(
+                pk__in=attractionPKs)
+            context['available_attractions'] = availableAttractions
         try:
             if self.request.user.pk == self.object.creator.pk:
                 context['changeNameForm'] = ChangeTripPlanNameForm
@@ -147,7 +158,7 @@ def addAttractionToTripPlan(request, trip_pk, attraction_pk):
     tripPlanInstance = get_object_or_404(
         TripPlan, pk=trip_pk)
     tripPlanInstance.attractions.add(attractionInstance)
-    return HttpResponseRedirect(reverse('edit-my-plan', kwargs={'pk': trip_pk}))
+    return HttpResponseRedirect(reverse('trip-plan-detail', kwargs={'pk': trip_pk}))
 
 
 @login_required

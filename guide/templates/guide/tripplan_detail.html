@@ -15,6 +15,7 @@
 </style>
 {% endblock styles %}
 {% block content %}
+{% load static %}
 <!-- Modal -->
                     {% if tripplan.getNumberOfAttractions > 1 %}
 
@@ -50,7 +51,7 @@
     </div>
   </div>
 {% endif %}
-                                      {% if tripplan.creator.pk == user.pk %}
+{% if tripplan.creator.pk == user.pk %}
   <!-- Modal -->
   <div class="modal fade" id="changeName" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -77,8 +78,53 @@
       
     </div>
   </div>
+ <!-- Modal -->
+  <!-- Modal -->
+  <div class="modal fade" id="addAtraction" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+      <!-- Modal content-->
+        <div class="container-fluid">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Dodaj atrakcje</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+            <div class="col text-center w mx-auto">
+                <div class="listing-block">
+                    {% for attraction in available_attractions %}
+                    {% if attraction not in tripplan.attractions.all %}
+                        <div class="card w-75 text-left mb-5 mx-auto">
+                            <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
+                                <div class="card-body">
+                                    <h5 class="card-title pb-5">{{attraction.name}}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        <i class="fa fa-clock-o pb-2"></i> {{attraction.getTimeAsFormattedString}}<br>
+                                        <i class="fa fa-money"></i> {{attraction.getFormattedCost}}
+                                    </h6>
+                                    {% if tripplan.creator.pk == user.pk %}
+                                        <p class="card-text text-right">
+                                            <a class="icon-wrapper" href="{% url 'add-attraction-to-trip-plan' tripplan.pk attraction.pk %}">
+                                                <i class="fas fa-plus-square"></i>
+                                            </a>
+                                        </p>
+                                    {% endif %}
+                                </div>
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+      </div>
+            </div>
+            </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 {% endif %}
-{% load static %}
 <div class="container-fluid">
     <div class="row mt-4 mr-4">
         <div class="col-4 text-right">
@@ -101,7 +147,7 @@
     <div class="row mt-4">
         <div class="col-5 text-center">
             <h3>Atrakcje wchodzące w plan:</h3>
-                <div class="listing-block "> 
+                <div class="listing-block ">
                     {% for attraction in tripplan.attractions.all %}
                         <div class="card w-75 text-left mb-5 mx-auto">
                             <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
@@ -125,10 +171,10 @@
                         </div>
                     {% endfor %}
                     {% if tripplan.creator.pk == user.pk and user.is_authenticated%}
-                    <div class="card bg-dark text-white w-75 mx-auto">
-                            <a href="#" class="card-title icon-wrapper text-white add-card"><i class="fas fa-plus-square"></i></a>
-                            
-                        </div>
+                     <div class="card bg-dark text-white w-75 mx-auto">
+                         <a href="#" class="card-title icon-wrapper text-white add-card"><i class="fas fa-plus-square" data-toggle="modal" data-target="#addAtraction"></i></a>
+
+                </div>
                     {% endif %}
                 </div>
       </div>
