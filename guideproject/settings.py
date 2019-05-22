@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'guide.apps.GuideConfig',
     'captcha',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
