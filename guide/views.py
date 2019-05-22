@@ -1,8 +1,8 @@
+from django_filters.views import FilterView
+from .filters import AttractionListFilter
 from django.contrib.auth.decorators import login_required
 from . import google_maps_api
-import imghdr
 import simplejson
-import types
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView, TemplateView
@@ -44,8 +44,10 @@ def extractInfo(attractionList):
         pass
 
 
-class AttractionListView(ListView):
+class AttractionListView(FilterView):
     model = Attraction
+    filterset_class = AttractionListFilter
+    context_object_name = 'attractions'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -94,7 +96,6 @@ class TripPlanDetailView(DetailView):
         if self.request.user.is_authenticated and self.request.user.pk == self.object.creator.pk:
             availableAttractions = Attraction.objects.exclude(
                 pk__in=self.object.attractions.values_list('pk'))
-            print(availableAttractions)
             context['availableAttractions'] = availableAttractions
             context['changeNameForm'] = ChangeTripPlanNameForm
         return context

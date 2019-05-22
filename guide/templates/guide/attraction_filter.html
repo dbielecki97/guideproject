@@ -26,14 +26,27 @@
 </style>
 {% endblock styles %}
 {% block content %}
-                {% load static %}
+{% load static %}
+{% load widget_tweaks %}
 <div class="container-fluid">
+<div class="row">
+    <div class="col">
+        <form action="" method="get" class="form-inline my-3">
+                {{ filter.form.categories.label}}
+                {{ filter.form.categories|add_class:"form-control ml-2" }}
+        </form>
+    </div>
+    <div class="col text-center my-3">
+        <h2>Atrakcje</h2>
+    </div>
+    <div class="col-4">
+</div>
+</div>
     <div class="row">
         <div class="col">
-            <h2 class="text-center my-4">Dostępne atrakcje</h2>
             <div class="listing-block text-center"> 
             <div class="card-columns"> 
-                {% for attraction in attraction_list %}
+                {% for attraction in filter.qs %}
                     <div class="card w-75 text-left">
                         <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
                         <div class="card-body">
@@ -59,6 +72,7 @@
         </div>
     </div>
 </div>
+
 {% endblock content %}
 
 {% block scripts%}
@@ -68,6 +82,7 @@
             $('.listing-block').slimScroll({
                 height: '800px'
             });
+            $('#id_categories').attr('onchange','this.form.submit()');
         });
     </script>    
 {% endblock scripts%}
