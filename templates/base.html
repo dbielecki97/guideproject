@@ -42,7 +42,6 @@
             <a class="dropdown-item" href="{% url 'my-trip-plans' %}">Moje wycieczki</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'general' %}">Zarządzaj kontem</a>
-            <a class="dropdown-item" href="#">Something else here</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'logout'%}?next={% url 'home' %}">Wyloguj</a>
           </div>
@@ -63,9 +62,8 @@
   </div>
     {% block content %}
     {% endblock %}
-  <footer id='footer'>
-    {% block footer %}All rights reserved &#9426 2019
-    {% endblock footer %}
+  <footer class="text-secondary page-footer text-center">
+    All rights reserved &#9426 2019
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

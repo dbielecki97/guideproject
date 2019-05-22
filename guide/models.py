@@ -142,11 +142,26 @@ class TripPlan(models.Model):
     def getNumberOfAttractions(self):
         return len(self.attractions.all())
 
-    def getTotalTimeSplit(self):
+    def getTotalTime(self):
         totalTime = 0
         for attraction in self.attractions.all():
             totalTime += attraction.timeNeededToSightsee
+        return totalTime
+
+    def getTotalTimeSplit(self):
+        totalTime = self.getTotalTime()
         return math.floor(totalTime), round((totalTime-math.floor(totalTime))*60)
+
+    def getFormattedTime(self):
+        time = self.getTotalTime()
+        hours = int(time)
+        minutes = int((time % 1)*60)
+        result = ''
+        if hours:
+            result += str(hours) + ' godzin(-a/y) '
+        if minutes:
+            result += str(minutes) + ' minut(-a)'
+        return result
 
     def getTotalCost(self):
         totalPrice = 0

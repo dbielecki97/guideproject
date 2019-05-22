@@ -1,43 +1,51 @@
 {% extends "base.html" %}
 {% block title %}
     Attractions
-{% endblock title %}    
+{% endblock title %}  
+{% block styles %}
+<style>
+.card-columns {
+    column-count:3;
+}
+.card-text{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+}
+</style>
+{% endblock styles %}   
 {% block content %}
     {%  load static %}
-  <link rel="stylesheet" href="{% static 'css/tripplan.css' %}">
-    <!-- Section heading -->
-<h2 class="h1-responsive font-weight-bold my-5">Proponowane plany</h2>
-<!-- Section description -->
-<p class="grey-text w-responsive mx-auto mb-5">Nie masz pomysłu na wycieczkę? Specjalnie dla ciebie przygotowaliśmy gotowe plany z których możesz skorzystać!</p>
-
-<!-- Grid row -->
-<div class="row text-center mx-auto">
-     {% if tripplan_list %}
-        {% for trip_plan in tripplan_list  %}
-  <!-- Grid column -->
-  <div class="col-lg-4 col-md-12 mb-lg-0 mb-4 mx-auto">
-    <!--Featured image-->
-    <div class="view overlay rounded z-depth-1">
-      <img src="https://www.bialystok.pl/resource/image/192/334/1021/2250/0x0.jpg" class="img-fluid wdn-stretch rounded-corners" alt="Sample project image">
-      <a>
-        <div class="mask rgba-white-slight"></div>
-      </a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col text-center">
+            <h2 class="display-4 my-2">Proponowane plany</h2>
+            <p class="text-secondary mx-auto mb-5">Nie masz pomysłu na wycieczkę? Specjalnie dla ciebie przygotowaliśmy gotowe plany z których możesz skorzystać!</p>
+        </div>
     </div>
-    <!--Excerpt-->
-    <div class="card-body pb-0">
-      <h4 class="font-weight-bold my-3">{{ trip_plan.name }}</h4>
-      <p class="grey-text">
-          <i class="fas fa-coins"></i> {{ trip_plan.getFormattedCost }} <br>
-          <i class="far fa-clock"></i> {{ trip_plan.getTotalTimeSplit }}
-      </p>
-      <a href="{% url 'trip-plan-detail' trip_plan.pk %}"><i class="far fa-eye"></i> Pokaż plan</a>
+    <div class="row">
+        <div class="col">
+            <div class="card-columns w-75 mx-auto"> 
+                {% for trip_plan in tripplan_list  %}
+                    <div class="card">
+                        <img class="card-img-top" src="https://www.bialystok.pl/resource/image/192/334/1021/2250/0x0.jpg" alt="{{trip_plan.name}}">
+                        <div class="card-body">
+                            <h5 class="card-title pb-5">{{trip_plan.name}}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <i class="fa fa-clock-o pb-2"></i> {{trip_plan.getFormattedTime}} <br>
+                                <i class="fa fa-money pb-2"></i> {{trip_plan.getFormattedCost}}<br>
+                                <i class="fas fa-map-marker"></i> {{trip_plan.getNumberOfAttractions}}
+                            </h6>
+                            <p class="card-text text-right">
+                                <a class="icon-wrapper" href="">
+                                    <i class="far fa-eye"></i>
+                                </a>
+                            </p> 
+                        </div> 
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-
-  </div>
-     {% endfor %}
-    {% else %}
-        <p>Brak gotowych planów</p>
-    {% endif %}
 </div>
-  <!-- Grid column -->
 {% endblock content %}

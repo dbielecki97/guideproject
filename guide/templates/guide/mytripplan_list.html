@@ -1,21 +1,72 @@
 {% extends "base.html" %}
 {% block title %}
-    Moje plany
-{% endblock title %}    
+    Attractions
+{% endblock title %}  
+{% block styles %}
+<style>
+.card-text{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+}
+</style>
+{% endblock styles %}   
 {% block content %}
-    <h1>Lista twoich planów</h1>
-    {% if mytripplans %}
-        <ul>
-        {% for trip_plan in mytripplans  %}
-        <li>
-            <a href="{% url 'trip-plan-detail' trip_plan.pk %}" >{{trip_plan.name}}</a>
-            <a href="{% url 'remove-my-plan' trip_plan.pk %}">
-                <i class="fas fa-trash-alt binIcon"></i>
-            </a>
-        </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>Brak planów</p>
-    {% endif %}
+    {%  load static %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col text-center">
+            <h1 class="display-4 my-2">Twoje plany</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="listing-block"> 
+                {% for trip_plan in mytripplans  %}
+                    {% if forloop.counter0|divisibleby:2 %}
+                        <div class="row mb-5">
+                            <div class="col">
+                                <div class="row">
+                    {% endif %}
+                    <div class="col-6">
+                    <div class="card w-50 {% cycle 'ml-auto' 'mr-auto' %}">
+                        <img class="card-img-top" src="https://www.bialystok.pl/resource/image/192/334/1021/2250/0x0.jpg" alt="{{trip_plan.name}}">
+                        <div class="card-body">
+                            <h5 class="card-title pb-5">{{trip_plan.name}}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <i class="fa fa-clock-o pb-2"></i> {{trip_plan.getFormattedTime}} <br>
+                                <i class="fa fa-money pb-2"></i> {{trip_plan.getFormattedCost}}<br>
+                                <i class="fas fa-map-marker"></i> {{trip_plan.getNumberOfAttractions}}
+                            </h6>
+                            <p class="card-text text-right">
+                                <a class="icon-wrapper" href="{% url 'trip-plan-detail' trip_plan.pk %}">
+                                    <i class="far fa-eye"></i>
+                                </a>
+                                <a class="icon-wrapper" href="{% url 'remove-my-plan' trip_plan.pk %}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </p> 
+                        </div> 
+                    </div>
+                    </div>
+                    {% if not forloop.counter0|divisibleby:2 %}
+                    </div>
+                    </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
+{% block scripts%}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+    <script>
+            $(function(){
+            $('.listing-block').slimScroll({
+                height: '800px'
+            });
+        });
+    </script>    
+{% endblock scripts%}

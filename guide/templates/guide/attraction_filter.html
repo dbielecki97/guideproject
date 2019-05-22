@@ -23,6 +23,11 @@
         column-count:1;
     }
 }
+.card-text{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+}
 </style>
 {% endblock styles %}
 {% block content %}
@@ -44,9 +49,14 @@
 </div>
     <div class="row">
         <div class="col">
-            <div class="listing-block text-center"> 
-            <div class="card-columns"> 
+            <div class="listing-block"> 
                 {% for attraction in filter.qs %}
+                {% load my_tags %}
+                    {% if forloop.counter0|modulo:3 == 0%}
+                        <div class="row mb-5">
+                            <div class="col">
+                                <div class="card-deck w-75 mx-auto">
+                    {% endif %}
                     <div class="card w-75 text-left">
                         <img class="card-img-top" src="{% static "images/" %}{{attraction.name}}.jpeg" alt="{{attraction.name}}">
                         <div class="card-body">
@@ -67,6 +77,11 @@
                             </p> 
                         </div> 
                     </div>
+                    {% if forloop.counter0|modulo:3 == 2%}
+                    </div>
+                    </div>
+                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
