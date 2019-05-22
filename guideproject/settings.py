@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'guide.apps.GuideConfig'
+    'guide.apps.GuideConfig',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +121,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/'
+RECAPTCHA_PUBLIC_KEY = '6LcJxqQUAAAAAB_R6OrVKfyw39Mc1K2WUur-skPo'
+RECAPTCHA_PRIVATE_KEY = '6LcJxqQUAAAAAKQKxM0y4nyqyMmffqH6ijNc8uYP'

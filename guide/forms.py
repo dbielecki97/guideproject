@@ -2,6 +2,8 @@ from django import forms
 from guide.models import Client, Attraction
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
+from captcha.fields import ReCaptchaField
+
 
 
 class SaveTripPlanForm(forms.Form):
@@ -21,6 +23,8 @@ class ChangeTripPlanNameForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
+    captcha = ReCaptchaField()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password1'].help_text = None
