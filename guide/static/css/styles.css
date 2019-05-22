@@ -1,14 +1,9 @@
 
-.footer {
-    padding: 0;
-    margin: 0;
-    position: fixed;
-    bottom: 0;
-    height: 30px;
-    line-height: 30px;
+#footer {
+  flex-shrink: none;
     font-size: 15px;
     text-align: center;
-    width: 100vw;
+
 }
 
 

@@ -3,17 +3,41 @@
     Attractions
 {% endblock title %}    
 {% block content %}
-    <center><h1>Lista proponowanych planów</h1></center>
-    {% if tripplan_list %}
+    {%  load static %}
+  <link rel="stylesheet" href="{% static 'css/tripplan.css' %}">
+    <!-- Section heading -->
+<h2 class="h1-responsive font-weight-bold my-5">Proponowane plany</h2>
+<!-- Section description -->
+<p class="grey-text w-responsive mx-auto mb-5">Nie masz pomysłu na wycieczkę? Specjalnie dla ciebie przygotowaliśmy gotowe plany z których możesz skorzystać!</p>
+
+<!-- Grid row -->
+<div class="row text-center mx-auto">
+     {% if tripplan_list %}
         {% for trip_plan in tripplan_list  %}
-          <center><div class="list-group" style="width: 60%;">
-  <a href="{% url 'trip-plan-detail' trip_plan.pk %}" class="list-group-item list-group-item-action">
-    {{trip_plan.name}}
-  </a>
-</div>
-</center>
-        {% endfor %}
+  <!-- Grid column -->
+  <div class="col-lg-4 col-md-12 mb-lg-0 mb-4 mx-auto">
+    <!--Featured image-->
+    <div class="view overlay rounded z-depth-1">
+      <img src="https://www.bialystok.pl/resource/image/192/334/1021/2250/0x0.jpg" class="img-fluid wdn-stretch rounded-corners" alt="Sample project image">
+      <a>
+        <div class="mask rgba-white-slight"></div>
+      </a>
+    </div>
+    <!--Excerpt-->
+    <div class="card-body pb-0">
+      <h4 class="font-weight-bold my-3">{{ trip_plan.name }}</h4>
+      <p class="grey-text">
+          <i class="fas fa-coins"></i> {{ trip_plan.getFormattedCost }} <br>
+          <i class="far fa-clock"></i> {{ trip_plan.getTotalTimeSplit }}
+      </p>
+      <a href="{% url 'trip-plan-detail' trip_plan.pk %}"><i class="far fa-eye"></i> Pokaż plan</a>
+    </div>
+
+  </div>
+     {% endfor %}
     {% else %}
         <p>Brak gotowych planów</p>
     {% endif %}
+</div>
+  <!-- Grid column -->
 {% endblock content %}
