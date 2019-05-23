@@ -1,2 +1,4 @@
 django-widget-tweaks
 django-filter
+weasyprint
+django-recaptcha

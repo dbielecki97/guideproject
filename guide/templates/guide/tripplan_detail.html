@@ -131,11 +131,12 @@
         <h3>{{tripplan.name}}</h3>
         </div>
         <div class="col-4 text-right">
+            <a class="icon-wrapper" href="{% url 'pdf' tripplan.pk %}"><i class="fas fa-file-pdf"></i></a>
             {% if tripplan.creator.pk == user.pk and tripplan.creator.pk %}
                 <a href="#" data-toggle="modal" data-target="#changeName" class="icon-wrapper"><i class="fas fa-edit"></i></a>
                 <a href="{% url 'remove-my-plan' tripplan.pk%}" class=icon-wrapper><i class="fas fa-trash-alt"></i></a>
             {% endif %}
-                    {% if tripplan.getNumberOfAttractions > 1 %}
+            {% if tripplan.getNumberOfAttractions > 1 %}
                  <a href="#" class="icon-wrapper" data-toggle="modal" data-target="#route">
                  <i class="fas fa-route route"></i>
                  </a>

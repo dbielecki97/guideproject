@@ -37,7 +37,7 @@
                                 <i class="fas fa-map-marker"></i> {{trip_plan.getNumberOfAttractions}}
                             </h6>
                             <p class="card-text text-right">
-                                <a class="icon-wrapper" href="">
+                                <a class="icon-wrapper" href="{% url 'trip-plan-detail' trip_plan.pk %}">
                                     <i class="far fa-eye"></i>
                                 </a>
                             </p> 

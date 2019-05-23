@@ -1,3 +1,7 @@
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
+from weasyprint import HTML
+from django.template.loader import render_to_string
 from django_filters.views import FilterView
 from .filters import AttractionListFilter
 from django.contrib.auth.decorators import login_required
@@ -93,11 +97,12 @@ class TripPlanDetailView(DetailView):
         hours, minutes = self.object.getTotalTimeSplit()
         context['hours'] = hours
         context['minutes'] = minutes
-        if self.request.user.is_authenticated and self.request.user.pk == self.object.creator.pk:
-            availableAttractions = Attraction.objects.exclude(
-                pk__in=self.object.attractions.values_list('pk'))
-            context['availableAttractions'] = availableAttractions
-            context['changeNameForm'] = ChangeTripPlanNameForm
+        if self.request.user.is_authenticated and self.object.creator:
+            if self.object.creator.pk == self.request.user.pk:
+                availableAttractions = Attraction.objects.exclude(
+                    pk__in=self.object.attractions.values_list('pk'))
+                context['availableAttractions'] = availableAttractions
+                context['changeNameForm'] = ChangeTripPlanNameForm
         return context
 
 
@@ -255,3 +260,21 @@ def generalSettings(request):
     return render(request, "registration/general.html", {
         'form': form
     })
+
+
+def html_to_pdf_view(request, pk):
+    tripplan = TripPlan.objects.get(pk=pk)
+    html_string = render_to_string(
+        'guide/pdf_template.html', {'tripplan': tripplan})
+
+    html = HTML(string=html_string)
+    html.write_pdf(target='/tmp/mypdf.pdf')
+
+    fs = FileSystemStorage('/tmp')
+    with fs.open('mypdf.pdf') as pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="' + \
+            tripplan.name+'.pdf"'
+        return response
+
+    return response
