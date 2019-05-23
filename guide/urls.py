@@ -28,4 +28,5 @@ urlpatterns = [
     path('myaccount/general', views.generalSettings, name='general'),
     path('myaccount/changepassword', views.change_password, name='change-password'),
     path('', views.home, name='home'),
+    path('pdf/<int:pk>', views.html_to_pdf_view, name='pdf'),
 ]
