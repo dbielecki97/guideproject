@@ -3,11 +3,19 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="bg">
+    <style>
+    .container-fluid {
+    background-image: url("https://images.pexels.com/photos/297755/pexels-photo-297755.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260");
+    height: 95vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+    </style>
+    <div class="container-fluid">
   <form method="post" action="{% url 'signup' %}">
-    <div class="container">
       <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-4 mx-auto">
+        <div class="col-sm-9 col-md-7 col-lg-3 mx-auto">
           <div class="card card-signin my-5">
             <div class="card-body">
               <h5 class="card-title text-center">Create an account </h5>
@@ -30,7 +38,6 @@
           </div>
         </div>
       </div>
-    </div>
   </form>
-  </div>
+    </div>
 {% endblock %}
