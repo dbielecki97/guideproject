@@ -12,6 +12,9 @@ h5{
     margin:0;
     color:grey;
 }
+h4{
+    margin:20px 0 10px 0;
+}
 .attr{
     margin-bottom:25px;
 }
@@ -27,6 +30,14 @@ h5{
     {% for attraction in tripplan.attractions.all %}
     <div class="attr">
         <h3>{{ attraction.name }}</h3>
+        <h4>Opis</h4>
+        <h5>{{attraction.description}}</h5>
+        <h4>Adres</h4>
+        <h5>{{attraction.localization}}</h5>
+        <h4>Kategoria</h4>
+        <h5>{{attraction.display_catogory}}</h5>
+        <h4>Czas i koszt</h4>
+        <h5>Czas potrzebny na zwiedzenie: {{ attraction.getTimeAsFormattedString }}</h3>
         <h5>Czas potrzebny na zwiedzenie: {{ attraction.getTimeAsFormattedString }}</h3>
         <h5>Koszy zwiedzenia: {{ attraction.getFormattedCost }}</h3>
     </div>
