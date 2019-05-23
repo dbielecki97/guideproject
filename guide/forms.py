@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from captcha.fields import ReCaptchaField
 
 
-
 class SaveTripPlanForm(forms.Form):
     name = forms.CharField(label='', widget=forms.TextInput(
         attrs={
@@ -27,17 +26,23 @@ class SignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password1'].help_text = None
         self.fields['username'].help_text = None
-        self.fields['username'].widget.attrs = {'class': 'form-control'}
-        self.fields['email'].widget.attrs = {'class': 'form-control'}
+        self.fields['email'].help_text = None
+        self.fields['password1'].help_text = None
+        self.fields['password2'].help_text = None
+        self.fields['username'].widget.attrs = {
+            'class': 'form-control', 'placeholder': 'nazwa użytkownika'}
+        self.fields['email'].widget.attrs = {
+            'class': 'form-control', 'placeholder': 'email'}
         self.fields['email'].required = True
-        self.fields['password1'].widget.attrs = {'class': 'form-control'}
-        self.fields['password2'].widget.attrs = {'class': 'form-control'}
+        self.fields['password1'].widget.attrs = {
+            'class': 'form-control', 'placeholder': 'hasło'}
+        self.fields['password2'].widget.attrs = {
+            'class': 'form-control', 'placeholder': 'potwierdzenie hasła'}
 
     class Meta:
         model = Client
-        fields = ("username", 'email', "password1", "password2")
+        fields = ("username", 'email', "password1", "password2", 'captcha')
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):

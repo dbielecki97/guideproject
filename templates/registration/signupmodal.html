@@ -1,0 +1,33 @@
+{% block signupmodal %}
+  <div class="modal fade" id="signup" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <!-- Modal content-->
+        <div class="container-fluid">
+         <form method="post" action="{% url 'signup' %}">
+{% csrf_token %}
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-12 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="modal-content">
+          <div class="card-body">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <h5 class="card-title text-center">Rejestracja </h5>
+              <hr/>
+                  {% for field in form.visible_fields %}
+                    <div class="form-group">
+                      {{ field.errors }}
+                      {{field}}
+                    </div>
+                  {% endfor %}
+                    <button class="btn btn-lg btn btn-primary btn-block text-uppercase" type="submit">załóż konto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+        </div>
+         </form>
+      </div>
+
+    </div>
+  </div>
+  {% endblock signupmodal %}

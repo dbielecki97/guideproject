@@ -13,7 +13,10 @@
     right:20px;
 }
 </style>
-{% endblock styles %}   
+{% endblock styles %}
+{% block tripplans_link %}
+    <a class="nav-link active" href="{% url 'trip-plans' %}">Gotowe wycieczki</a>
+{% endblock tripplans_link %}
 {% block content %}
     {%  load static %}
 <div class="container-fluid">
