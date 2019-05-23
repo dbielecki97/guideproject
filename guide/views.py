@@ -227,7 +227,7 @@ def change_password(request):
             messages.error(request, 'Please correct the error below.')
     else:
         form = CustomPasswordChangeForm(request.user)
-    return render(request, 'account/changepassword.html', {
+    return render(request, 'registration/changepassword.html', {
         'form': form
     })
 
@@ -252,6 +252,6 @@ def generalSettings(request):
             'name': client.name,
             'surname': client.surname
         })
-    return render(request, "account/general.html", {
+    return render(request, "registration/general.html", {
         'form': form
     })

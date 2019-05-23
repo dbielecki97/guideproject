@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 
 {% block title %}Sign Up{% endblock %}
-
-{% block content %}
-    <style>
+{% block styles %}
+ <style>
     .container-fluid {
     background-image: url("https://images.pexels.com/photos/297755/pexels-photo-297755.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260");
     height: 95vh;
@@ -12,6 +11,9 @@
     background-size: cover;
 }
     </style>
+{% endblock styles %}
+{% block content %}
+   
     <div class="container-fluid">
   <form method="post" action="{% url 'signup' %}">
       <div class="row">
