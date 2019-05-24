@@ -28,7 +28,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'form': SignUpForm})
 
 
 def extractInfo(attractionList):
@@ -55,6 +55,7 @@ class AttractionListView(FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = SignUpForm
         if self.request.user.is_authenticated:
             attractions = ShoppingCart.objects.get(
                 owner=self.request.user).attractions.all()
@@ -71,17 +72,21 @@ class AttractionDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['attractionLocalization'] = extractInfo(self.object)
-        try:
+        context['form'] = SignUpForm
+        if self.request.user.is_authenticated:
             shoppingcart = ShoppingCart.objects.get(owner=self.request.user)
             if shoppingcart.attractions.filter(pk=self.object.pk):
                 context['inPlan'] = True
-        except:
-            pass
         return context
 
 
 class TripPlanListView(ListView):
     model = TripPlan
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = SignUpForm
+        return context
 
     def get_queryset(self):
         return TripPlan.objects.filter(creator__isnull=True)
@@ -97,6 +102,7 @@ class TripPlanDetailView(DetailView):
         hours, minutes = self.object.getTotalTimeSplit()
         context['hours'] = hours
         context['minutes'] = minutes
+        context['form'] = SignUpForm
         if self.request.user.is_authenticated and self.object.creator:
             if self.object.creator.pk == self.request.user.pk:
                 availableAttractions = Attraction.objects.exclude(

@@ -2,66 +2,85 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>{% block title %}{% endblock %}</title>
-  <meta name="viewport" content= "width=device-width, initial-scale=1.0"> 
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
-{% block styles %}
-
-{% endblock styles %}
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content= "width=device-width, initial-scale=1.0"> 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+    {% block styles %}
+    {% endblock styles %}
 </head>
 <body>
-  <div class="banner" >
+{% if not user.is_authenticated %}
+    {% block login_modal %}
+        {% include "registration/signinmodal.html" %}
+    {% endblock login_modal %}
+    {% block signup_modal %}
+        {% include "registration/signupmodal.html" %}
+    {% endblock signup_modal %}
+{% endif %}
+
+<div class="banner" >
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{% url 'home' %}">Guideproject</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav" >
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'attractions' %}">Atrakcje</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'trip-plans' %}">Gotowe wycieczki</a>
-      </li>
-      {% if user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'shopping-cart' %}">Twój plan</a>
-      </li>
-      {% endif %}
-    </ul>
-      {% if user.is_authenticated %}
-      <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{user.username}} <i class="fas fa-user"></i></a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="{% url 'my-trip-plans' %}">Moje wycieczki</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'general' %}">Zarządzaj kontem</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'logout'%}?next={% url 'home' %}">Wyloguj</a>
-          </div>
-        </li>
-      </ul>
-      {% else %}
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class = "nav-link" href="{% url 'login'%}">Zaloguj</a>
-        </li>   
-        <li class="nav-item">
-        <a class = "nav-link btn btn-outline-secondary" href="{% url 'signup'%}">Załóż konto</a>
-        </li>   
-      </ul>
-      {% endif %}  
-  </div>
-</nav>
-  </div>
+        <a class="navbar-brand" href="{% url 'home' %}">Guideproject</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav" >
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    {% block attractions_link %}
+                        <a class="nav-link" href="{% url 'attractions' %}">Atrakcje</a>
+                    {% endblock attractions_link %}
+                </li>
+                <li class="nav-item">
+                    {% block tripplans_link %}
+                        <a class="nav-link" href="{% url 'trip-plans' %}">Gotowe wycieczki</a>
+                    {% endblock tripplans_link %}
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        {% block shoppingcart_link %}
+                            <a class="nav-link" href="{% url 'shopping-cart' %}">Twój plan</a>
+                        {% endblock shoppingcart_link %}
+                    </li>
+                {% endif %}
+            </ul>
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{user.username}} <i class="fas fa-user"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{% url 'my-trip-plans' %}">Moje wycieczki</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'general' %}">Zarządzaj kontem</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'logout'%}?next={% url 'home' %}">Wyloguj</a>
+                        </div>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav">
+                    {% block signin_button %}
+                        <li class="nav-item">
+                            <a class = "nav-link" href="#" data-toggle="modal" data-target="#login">Zaloguj</a>
+                        </li>   
+                    {% endblock signin_button %}
+                    {% block signup_button %}
+                        <li class="nav-item">
+                            <a class = "nav-link" href="#" data-toggle="modal" data-target="#signup">Zarejestruj</a>
+                        </li>
+                    {% endblock signup_button %}
+                </ul>
+            {% endif %}  
+        </div>
+    </nav>
+</div>
     {% block content %}
-    {% endblock %}
+    {% endblock content%}
   <footer class="text-secondary page-footer text-center">
     All rights reserved &#9426 2019
   </footer>

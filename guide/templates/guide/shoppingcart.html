@@ -16,6 +16,9 @@ form{
 }
 </style>
 {% endblock styles %}
+{% block shoppingcart_link %}
+    <a class="nav-link active" href="{% url 'shopping-cart' %}">Twój plan</a>
+{% endblock shoppingcart_link %}
 {% block content %}
 {% load static %}
     {% if attractions  %}

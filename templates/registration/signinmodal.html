@@ -1,0 +1,36 @@
+  <div class="modal fade" id="login" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+      <!-- Modal content-->
+        <div class="container-fluid">
+         <form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-12 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="modal-content" style="border: 0px; border-radius: 25px;">
+          <div class="card-body">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h5 class="card-title text-center">Logowanie</h5>
+              <div class="form-label-group">
+                <input type="text" id="id_username_" class="form-control my-3" placeholder="login" name="username" required autofocus>
+              </div>
+                <div class="form-label-group">
+                  <input type="password" id="id_password_" class="form-control my-3" placeholder="hasło" name="password" required>
+              </div>
+               {% if form.errors %}
+   <div class="alert alert-danger">
+  <strong>Błędne login lub hasło!</strong>
+</div>
+{% endif %}
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">zaloguj</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
