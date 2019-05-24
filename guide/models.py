@@ -43,7 +43,7 @@ class Attraction(models.Model):
     def __str__(self):
         return self.name
 
-    def display_catogory(self):
+    def display_category(self):
         """Create a string for the Category. This is required to display category in Admin."""
         return ', '.join(category.name for category in self.categories.all())
 
@@ -63,7 +63,7 @@ class Attraction(models.Model):
         else:
             return f'{str(self.ticketCost)} zł'
 
-    display_catogory.short_description = 'Category'
+    display_category.short_description = 'Category'
 
     class Meta:
         ordering = ['name']

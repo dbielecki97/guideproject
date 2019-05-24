@@ -194,7 +194,6 @@ def saveTripPlan(request, pk):
 
 class SignUp(FormView):
     form_class = SignUpForm
-    success_url = 'home'
     template_name = 'registration/signup.html'
 
     def form_valid(self, form):
@@ -203,7 +202,8 @@ class SignUp(FormView):
         password = self.request.POST['password1']
         user = authenticate(username=username, password=password)
         login(self.request, user)
-        return redirect(self.success_url)
+        print(self.request.POST)
+        return redirect(reverse('home'))
 
 
 @login_required

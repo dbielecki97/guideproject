@@ -27,7 +27,7 @@ Logowanie
 {% endblock signin_button %}
 {% block content %}
     <div class="container-fluid">
-        <form method="post" action="{% url 'login' %}" class="w-25 mx-auto">
+        <form method="post" action="{% url 'login' %}?next={{next}}" class="w-25 mx-auto">
             {% csrf_token %}
             <div class="row">
                 <div class="col-sm-9 col-md-7 col-lg-12 mx-auto">

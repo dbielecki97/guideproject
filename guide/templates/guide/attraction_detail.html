@@ -16,6 +16,12 @@
 {% endblock styles %}
 {% block content %}
 {% load static %}
+{% block signin_modal %}
+        {% include "registration/signinmodal.html" with redirect='attraction-detail' pk=attraction.pk %}
+    {% endblock signin_modal %}
+    {% block signup_modal %}
+        {% include "registration/signupmodal.html" with redirect='attraction-detail' pk=attraction.pk %}
+    {% endblock signup_modal %}
 <section class="container-fluid">
     <div class="row mt-4 mr-4">
         <div class="col-4 text-right">

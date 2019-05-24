@@ -17,6 +17,12 @@
 {% block tripplans_link %}
     <a class="nav-link active" href="{% url 'trip-plans' %}">Gotowe wycieczki</a>
 {% endblock tripplans_link %}
+{% block signin_modal %}
+        {% include "registration/signinmodal.html" with redirect='trip-plans'%}
+    {% endblock signin_modal %}
+    {% block signup_modal %}
+        {% include "registration/signupmodal.html" with redirect='trip-plans' %}
+    {% endblock signup_modal %}
 {% block content %}
     {%  load static %}
 <div class="container-fluid">

@@ -16,6 +16,12 @@
 {% endblock styles %}
 {% block content %}
 {% load static %}
+{% block signin_modal %}
+        {% include "registration/signinmodal.html" with redirect="trip-plan-detail" pk=tripplan.pk %}
+    {% endblock signin_modal %}
+    {% block signup_modal %}
+        {% include "registration/signupmodal.html" with redirect="trip-plan-detail" pk=tripplan.pk %}
+    {% endblock signup_modal %}
 <!-- Modal -->
                     {% if tripplan.getNumberOfAttractions > 1 %}
 

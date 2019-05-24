@@ -4,7 +4,7 @@ from guide.models import Attraction, Category, Client, Localization, ShoppingCar
 
 @admin.register(Attraction)
 class AttractionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'localization', 'display_catogory',
+    list_display = ('name', 'localization', 'display_category',
                     'timeNeededToSightsee', 'ticketCost')
     list_filter = ('timeNeededToSightsee', 'ticketCost', 'categories')
 

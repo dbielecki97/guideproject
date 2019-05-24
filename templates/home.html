@@ -1,18 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Guide{% endblock %}
+{% block signin_modal %}
+        {% include "registration/signinmodal.html" with redirect='home'%}
+    {% endblock signin_modal %}
+    {% block signup_modal %}
+        {% include "registration/signupmodal.html" with redirect='home' %}
+    {% endblock signup_modal %}
 {% block content %}
-<!--<style>
-.carousel{
-    background: #2f4357;
-    margin-top: 20px;
-}
-.carousel-item{
-    text-align: center;
-    min-height: 280px; /* Prevent carousel from being distorted if for some reason image doesn't load */
-}
-.bs-example{
-	margin: 20px;
-} -->
 <style>
 .carousel-item {
   height: 88vh;
@@ -25,12 +19,6 @@
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 </style>
- <!--<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1 class="display-4">Odkryj Białystok!</h1>
-    <p class="lead">Super strona pomoże ci poznać Białystok od super strony.</p>
-  </div>
-</div> -->
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -48,15 +36,15 @@
       <!-- Slide Two - Set the background image for this slide in the line below -->
       <div class="carousel-item" style="background-image: url('https://hotelcristal.com.pl/wp-content/uploads/2019/02/bia%C5%82ystok-noc-hotel.jpg')">
         <div class="carousel-caption d-none d-md-block">
-          <h2 class="display-4"style="font-weight: bold">Poznaj Białystok</h2>
+          <h2 class="display-4"style="font-weight: bold">Poznaj Białystok.</h2>
           <p class="lead"style="font-weight: bold">Zobacz najciekawsze lokalizacje i atrakcje.</p>
         </div>
       </div>
       <!-- Slide Three - Set the background image for this slide in the line below -->
-      <div class="carousel-item" style="background-image: url('https://www.wykop.pl/cdn/c3201142/comment_T7qfGBB4CF1xxn0uusXwuaA9tkTWF0yB.jpg')">
+      <div class="carousel-item" style="background-image: url('https://i.ytimg.com/vi/Oyn3USyfcEs/maxresdefault.jpg')">
         <div class="carousel-caption d-none d-md-block">
-          <h2 class="display-4"style="font-weight: bold">Poznaj słynne osoby</h2>
-          <p class="lead"style="font-weight: bold">Król.</p>
+          <h2 class="display-4"style="font-weight: bold">Daj się zachwycić.</h2>
+          <p class="lead"style="font-weight: bold">Zwiedź już dziś.</p>
         </div>
       </div>
     </div>

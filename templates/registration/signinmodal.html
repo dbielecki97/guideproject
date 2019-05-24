@@ -3,7 +3,13 @@
 
       <!-- Modal content-->
         <div class="container-fluid">
-         <form method="post" action="{% url 'login' %}">
+            {% if pk %}
+                <form method="post" action="{% url 'login' %}?next={% url redirect pk %}">
+            {% else %}
+                {% if redirect %}
+                   <form method="post" action="{% url 'login' %}?next={% url redirect %}">
+                {% endif %}
+            {% endif %}
 {% csrf_token %}
     <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-12 mx-auto">
@@ -22,7 +28,7 @@
    <div class="alert alert-danger">
   <strong>Błędne login lub hasło!</strong>
 </div>
-{% endif %}
+{% endif %}   
               <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">zaloguj</button>
             </form>
           </div>
