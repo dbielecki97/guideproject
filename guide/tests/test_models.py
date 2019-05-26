@@ -81,7 +81,7 @@ class AttractionModelTest(TestCase):
         localization = Localization.objects.get(id=1)
         Category.objects.create(name='Test category')
         category = Category.objects.get(id=1)
-        attraction = Attraction.objects.create(name='Test attraction',description='yes',localization=localization,timeNeededToSightsee=0,ticketCost=0)
+        attraction = Attraction.objects.create(name='Test attraction',description='yes',localization=localization,timeNeededToSightsee=1.25,ticketCost=0)
         attraction.categories.set((category,))
         attraction.save()
 
@@ -115,6 +115,15 @@ class AttractionModelTest(TestCase):
         expected_return = ', '.join(category.name for category in attraction.categories.all())
         self.assertEquals(expected_return, attraction.display_category())
 
+    def test_getTimeAsFormattedString(self):
+        attraction = Attraction.objects.get(id=1)
+        expected_return = '1 godzin(-a/y) 15 minut(-a)'
+        self.assertEquals(expected_return, attraction.getTimeAsFormattedString())
+
+    def test_getFormattedCost(self):
+        attraction = Attraction.objects.get(id=1)
+        expected_return = 'Darmowe'
+        self.assertEquals(expected_return, attraction.getFormattedCost())
         
 
 
@@ -175,7 +184,16 @@ class ShoppingCartModelTest(TestCase):
     def setUpTestData(cls):
         Client.objects.create(name='Test client',surname='Testowy')
         client = Client.objects.get(id=1)
-        ShoppingCart.objects.create(owner=client)
+        Localization.objects.create(street='Jana Kilińskiego 1',zipCode='15-089',city='Białystok')
+        localization = Localization.objects.get(id=1)
+        Category.objects.create(name='Test category')
+        category = Category.objects.get(id=1)
+        attraction = Attraction.objects.create(name='Test attraction',description='yes',localization=localization,timeNeededToSightsee=1.25,ticketCost=10)
+        attraction.categories.set((category,))
+        attraction.save()
+        cart = ShoppingCart.objects.create(owner=client)
+        cart.attractions.set((attraction,))
+        cart.save()
 
     def test_owner_label(self):
         cart = ShoppingCart.objects.get(id=1)
@@ -187,11 +205,48 @@ class ShoppingCartModelTest(TestCase):
         field_label = cart._meta.get_field('attractions').verbose_name
         self.assertEquals(field_label, 'Attraction list')
 
-    """def test_owner_username(self):
+    def test_owner_username(self):
         cart = ShoppingCart.objects.get(id=1)
         client = Client.objects.get(id=1)
         username = f'{client.username}'
-        self.assertEquals(username, cart.owner_username)"""
+        self.assertEquals(username, cart.owner_username())
+
+    def test_owner_name(self):
+        cart = ShoppingCart.objects.get(id=1)
+        client = Client.objects.get(id=1)
+        name = f'{client.name}'
+        self.assertEquals(name, cart.owner_name())
+
+    def test_owner_surname(self):
+        cart = ShoppingCart.objects.get(id=1)
+        client = Client.objects.get(id=1)
+        surname = f'{client.surname}'
+        self.assertEquals(surname, cart.owner_surname())
+
+    """def test_getNumberOfAttractions(self):
+        cart = ShoppingCart.objects.get(id=1)
+        expected_result = 1
+        self.assertEquals(expected_result, cart.getNumberOfAttractions())
+
+    def test_getTotalTime(self):
+        cart = ShoppingCart.objects.get(id=1)
+        expected_result = 1.25
+        self.assertEquals(expected_result, cart.getTotalTime())
+
+    def test_getTimeAsFormattedString(self):
+        cart = ShoppingCart.objects.get(id=1)
+        expected_result = '1 godzin(-a/y) 15 minut(-a)'
+        self.assertEquals(expected_result, cart.getTimeAsFormattedString())
+
+    def test_getTotalCost(self):
+        cart = ShoppingCart.objects.get(id=1)
+        expected_result = 10
+        self.assertEquals(expected_result, cart.getTotalCost())
+    
+    def test_getFormattedCost(self):
+        cart = ShoppingCart.objects.get(id=1)
+        expected_result = '10.0 zł'
+        self.assertEquals(expected_result, cart.getFormattedCost())"""
 
 
 
@@ -200,7 +255,16 @@ class TripPlanModelTest(TestCase):
     def setUpTestData(cls):
         Client.objects.create(name='Test client',surname='Testowy')
         client = Client.objects.get(id=1)
-        TripPlan.objects.create(name='test_name',creator=client)
+        Localization.objects.create(street='Jana Kilińskiego 1',zipCode='15-089',city='Białystok')
+        localization = Localization.objects.get(id=1)
+        Category.objects.create(name='Test category')
+        category = Category.objects.get(id=1)
+        attraction = Attraction.objects.create(name='Test attraction',description='yes',localization=localization,timeNeededToSightsee=1.25,ticketCost=10)
+        attraction.categories.set((category,))
+        attraction.save()
+        plan = TripPlan.objects.create(name='test_name',creator=client)
+        plan.attractions.set((attraction,))
+        plan.save()
 
     def test_name_label(self):
         plan = TripPlan.objects.get(id=1)
@@ -221,3 +285,28 @@ class TripPlanModelTest(TestCase):
         plan = TripPlan.objects.get(id=1)
         expected_object_name = f'{plan.name}'
         self.assertEquals(expected_object_name, str(plan))
+
+    def test_getNumberOfAttractions(self):
+        plan = TripPlan.objects.get(id=1)
+        expected_result = 1
+        self.assertEquals(expected_result, plan.getNumberOfAttractions())
+
+    def test_getTotalTime(self):
+        plan = TripPlan.objects.get(id=1)
+        expected_result = 1.25
+        self.assertEquals(expected_result, plan.getTotalTime())
+
+    def test_getFormattedTime(self):
+        plan = TripPlan.objects.get(id=1)
+        expected_result = '1 godzin(-a/y) 15 minut(-a)'
+        self.assertEquals(expected_result, plan.getFormattedTime())
+
+    def test_getTotalCost(self):
+        plan = TripPlan.objects.get(id=1)
+        expected_result = 10
+        self.assertEquals(expected_result, plan.getTotalCost())
+    
+    def test_getFormattedCost(self):
+        plan = TripPlan.objects.get(id=1)
+        expected_result = '10.0 zł'
+        self.assertEquals(expected_result, plan.getFormattedCost())
