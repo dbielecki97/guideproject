@@ -70,14 +70,18 @@ class Attraction(models.Model):
 
 
 class Localization(models.Model):
-    street = models.CharField(_("Street"), max_length=100)
+    street = models.CharField(
+        _("Street"), max_length=100, null=True, blank=True, default='')
     zipCode = models.CharField(_("Zip code"), max_length=100)
     city = models.CharField(_("City"), max_length=100)
     lattitude = models.FloatField(_("Lattitude"), default=0)
     longitude = models.FloatField(_("Longitude"), default=0)
 
     def __str__(self):
-        return self.street+', '+self.zipCode+', '+self.city
+        if self.street:
+            return '' + str(self.street) + ', ' + self.zipCode + ', ' + self.city
+        else:
+            return '' + self.zipCode + ', ' + self.city
 
 
 class ShoppingCart(models.Model):

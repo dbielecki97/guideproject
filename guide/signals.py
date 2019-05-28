@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from . import google_maps_api
 
@@ -15,7 +15,13 @@ def createShoppingCartForClient(sender, instance, created, **kwargs):
 def populateAttractionsGeoCoordinates(sender, instance, created, **kwargs):
     if created:
         apiResponse = google_maps_api.search_place(
-            ''+instance.name+' '+instance.localization.street+''+instance.localization.zipCode+' '+instance.localization.city)
-        instance.localization.lattitude = apiResponse['geometry']['location']['lat']
-        instance.localization.longitude = apiResponse['geometry']['location']['lng']
-        instance.localization.save()
+            '' + instance.name + ' ' + instance.localization.street if instance.localization.street else '' + '' + instance.localization.zipCode + ' ' + instance.localization.city)
+        if apiResponse:
+            instance.localization.lattitude = apiResponse['geometry']['location']['lat']
+            instance.localization.longitude = apiResponse['geometry']['location']['lng']
+            instance.localization.save()
+
+
+@receiver(post_delete, sender=Attraction)
+def deleteLocalization(sender, instance, using, **kwargs):
+    Localization.objects.get(pk=instance.localization.pk).delete()
