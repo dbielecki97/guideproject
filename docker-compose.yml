@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  django:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile-django
+    command: ./entrypoint.sh
+    ports:
+      - "8000:8000"
+    volumes:
+      - static:/code/static
+volumes:
+  static:

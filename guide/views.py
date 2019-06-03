@@ -202,7 +202,6 @@ class SignUp(FormView):
         password = self.request.POST['password1']
         user = authenticate(username=username, password=password)
         login(self.request, user)
-        print(self.request.POST)
         return redirect(reverse('home'))
 
 

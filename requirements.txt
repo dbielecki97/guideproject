@@ -2,3 +2,6 @@ django-widget-tweaks
 django-filter
 weasyprint
 django-recaptcha
+requests
+simplejson
+pycairo>=1.15.4
