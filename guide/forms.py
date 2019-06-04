@@ -22,7 +22,10 @@ class ChangeTripPlanNameForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
-    captcha = ReCaptchaField()
+    captcha = ReCaptchaField(error_messages={
+        "captcha_invalid": "Błąd przy weryfikacji reCAPTCHA, spróbuj ponownie.",
+        "captcha_error": "Błąd przy weryfikacji reCAPTCHA, spróbuj ponownie.",
+    })
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -46,10 +49,14 @@ class SignUpForm(UserCreationForm):
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
+
     def __init__(self, *args, **kwargs):
         super(PasswordChangeForm, self).__init__(*args, **kwargs)
         for key in self.fields:
             self.fields[key].widget.attrs = {'class': 'form-control'}
+        self.fields['old_password'].label = 'Stare hasło'
+        self.fields['new_password1'].label = 'Nowe hasło'
+        self.fields['new_password2'].label = 'Potwierdzenie hasła'
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -60,6 +67,9 @@ class CustomUserChangeForm(UserChangeForm):
         self.fields['email'].required = True
         for key in self.fields:
             self.fields[key].widget.attrs = {'class': 'form-control'}
+        self.fields['email'].label = 'email'
+        self.fields['name'].label = 'imie'
+        self.fields['surname'].label = 'nazwisko'
 
     class Meta:
         model = Client

@@ -6,13 +6,13 @@
     <div class="row">
       <div class="col-3" style="margin-right: 1rem">
         <div class="list-group">
-          <a href="{% url 'general' %}" class="list-group-item list-group-item-action">General</a>
-          <a href="{% url 'change-password' %}" class="btn btn-default list-group-item list-group-item-action" name="change">Change password</a>
+          <a href="{% url 'general' %}" class="list-group-item list-group-item-action">Ogólne</a>
+          <a href="{% url 'change-password' %}" class="btn btn-default list-group-item list-group-item-action" name="change">Zmiana hasła</a>
         </div>
       </div>
       <div class="col-8"> 
         {% block accountcontent %}
-          <h5>Your account: {{ request.user.username }}</h5>
+          <h5>Twoje konto: {{ request.user.username }}</h5>
           <hr/>
           <form method="post">
               {% csrf_token %}
@@ -25,7 +25,7 @@
                   {{field}}
               </div>
           {% endfor %}
-          <button class="bg-primary text-white form-control" style="margin-top: 1rem" type="submit">Save</button>
+          <button class="bg-primary text-white form-control" style="margin-top: 1rem" type="submit">Zapisz</button>
           </form>
           {%for message in messages%}
               {{message}}
